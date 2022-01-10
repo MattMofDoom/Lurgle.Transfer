@@ -72,7 +72,7 @@ namespace Lurgle.Sftp
         /// </summary>
         /// <param name="sourceFiles"></param>
         /// <returns></returns>
-        private static List<SftpInfo> GetFileInfo(IEnumerable<string> sourceFiles)
+        public static List<SftpInfo> GetFileInfo(IEnumerable<string> sourceFiles)
         {
             return (from file in sourceFiles
                 let fileAccess = File.GetLastAccessTimeUtc(file)
@@ -107,7 +107,7 @@ namespace Lurgle.Sftp
         /// <param name="filePath">Path to the file</param>
         /// <param name="appendType"></param>
         /// <returns></returns>
-        private static string GetNewName(string filePath, AppendType appendType = AppendType.Prefix)
+        public static string GetNewName(string filePath, AppendType appendType = AppendType.Prefix)
         {
             var fileName = Path.GetFileName(filePath);
             var destPath = Path.GetDirectoryName(filePath);
