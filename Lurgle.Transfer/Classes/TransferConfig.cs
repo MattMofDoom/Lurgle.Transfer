@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Reflection;
 using Lurgle.Transfer.Enums;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -23,14 +24,14 @@ namespace Lurgle.Transfer.Classes
         private const int DefaultFtpBufferSize = 262144;
 
         /// <summary>
-        ///     Configuration path
-        /// </summary>
-        public string ConfigPath { get; private set; }
-
-        /// <summary>
         ///     App name
         /// </summary>
         public string AppName { get; private set; }
+
+        /// <summary>
+        ///     App version will be determined from the binary version, but can be overriden
+        /// </summary>
+        public string AppVersion { get; private set; }
 
         /// <summary>
         ///     Source path
@@ -71,20 +72,47 @@ namespace Lurgle.Transfer.Classes
             if (config == null)
                 transferConfig = new TransferConfig
                 {
-                    ConfigPath = AppDomain.CurrentDomain.GetData("APP_CONFIG_FILE").ToString(),
                     AppName = ConfigurationManager.AppSettings["AppName"],
                     SourcePath = ConfigurationManager.AppSettings["SourcePath"],
                     DestPath = ConfigurationManager.AppSettings["DestPath"],
                     //Default doArchive to true for legacy configs
                     DoArchive = string.IsNullOrEmpty(ConfigurationManager.AppSettings["DoArchive"]) ||
-                                Transfers.GetBool(ConfigurationManager.AppSettings["DoArchive"]),
+                                GetBool(ConfigurationManager.AppSettings["DoArchive"]),
                     ArchivePath = ConfigurationManager.AppSettings["ArchivePath"],
-                    ArchiveDays = Transfers.GetInt(ConfigurationManager.AppSettings["ArchiveDays"]),
+                    ArchiveDays = GetInt(ConfigurationManager.AppSettings["ArchiveDays"]),
                     SftpDestinations = GetDestinations(ConfigurationManager.AppSettings["SftpDestinations"])
                 };
             else
                 transferConfig = config;
 
+            var isSuccess = true;
+
+            //If AppName is not specified in config, attempt to populate it. Populate AppVersion while we're at it.
+            try
+            {
+                if (string.IsNullOrEmpty(transferConfig.AppName))
+                    transferConfig.AppName = Assembly.GetEntryAssembly()?.GetName().Name;
+
+                transferConfig.AppVersion = Assembly.GetEntryAssembly()?.GetName().Version.ToString();
+            }
+            catch
+            {
+                isSuccess = false;
+            }
+
+            if (!isSuccess)
+                try
+                {
+                    if (string.IsNullOrEmpty(transferConfig.AppName))
+                        transferConfig.AppName = Assembly.GetExecutingAssembly().GetName().Name;
+
+                    transferConfig.AppVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                }
+                catch
+                {
+                    //We surrender ...
+                    transferConfig.AppVersion = string.Empty;
+                }
             if (transferConfig.ArchiveDays.Equals(-1) || transferConfig.ArchiveDays < ArchiveDaysMin ||
                 transferConfig.ArchiveDays > ArchiveDaysMax)
                 transferConfig.ArchiveDays = ArchiveDaysDefault;
@@ -92,6 +120,40 @@ namespace Lurgle.Transfer.Classes
             if (transferConfig.ArchiveDays.Equals(0)) transferConfig.DoArchive = false;
 
             return transferConfig;
+        }
+
+        /// <summary>
+        ///     Convert the supplied <see cref="object" /> to a <see cref="bool" />
+        ///     <para />
+        ///     This will filter out nulls that could otherwise cause exceptions
+        /// </summary>
+        /// <param name="sourceObject">An object that can be converted to a bool</param>
+        /// <returns></returns>
+        private static bool GetBool(object sourceObject)
+        {
+            var sourceString = string.Empty;
+
+            if (!Convert.IsDBNull(sourceObject)) sourceString = (string)sourceObject;
+
+            return bool.TryParse(sourceString, out var destBool) && destBool;
+        }
+
+        /// <summary>
+        ///     Convert the supplied <see cref="object" /> to an <see cref="int" />
+        ///     <para />
+        ///     This will filter out nulls that could otherwise cause exceptions
+        /// </summary>
+        /// <param name="sourceObject">An object that can be converted to an int</param>
+        /// <returns></returns>
+        private static int GetInt(object sourceObject)
+        {
+            var sourceString = string.Empty;
+
+            if (!Convert.IsDBNull(sourceObject)) sourceString = (string)sourceObject;
+
+            if (int.TryParse(sourceString, out var destInt)) return destInt;
+
+            return -1;
         }
 
         /// <summary>
@@ -115,7 +177,7 @@ namespace Lurgle.Transfer.Classes
         /// </summary>
         /// <param name="ftpDestination">Retrieve the config for this destination</param>
         /// <returns></returns>
-        private TransferAuth GetFtpAuth(Destination ftpDestination)
+        private static TransferAuth GetFtpAuth(Destination ftpDestination)
         {
             return Enum.TryParse(
                 ConfigurationManager.AppSettings[
@@ -130,7 +192,7 @@ namespace Lurgle.Transfer.Classes
         /// </summary>
         /// <param name="configValue">Setting string</param>
         /// <returns></returns>
-        private CompressType GetCompressType(string configValue)
+        private static CompressType GetCompressType(string configValue)
         {
             return Enum.TryParse(configValue, true, out CompressType compressType)
                 ? compressType
@@ -142,7 +204,7 @@ namespace Lurgle.Transfer.Classes
         /// </summary>
         /// <param name="ftpDestination">Setting string</param>
         /// <returns></returns>
-        private TransferType GetTransferType(Destination ftpDestination)
+        private static TransferType GetTransferType(Destination ftpDestination)
         {
             //Allow configs using the old incorrect config line (xTransferType instead of xSftpTransferType") to still work 
             var configLine =
@@ -161,7 +223,7 @@ namespace Lurgle.Transfer.Classes
         /// </summary>
         /// <param name="ftpDestination">Setting string</param>
         /// <returns></returns>
-        private TransferMode GetTransferMode(Destination ftpDestination)
+        private static TransferMode GetTransferMode(Destination ftpDestination)
         {
             //Allow configs using the old incorrect config line (xTransferMode instead of xSftpTransferMode") to still work 
             var configLine =
@@ -180,17 +242,17 @@ namespace Lurgle.Transfer.Classes
         /// </summary>
         /// <param name="mailConfig"></param>
         /// <returns></returns>
-        private bool GetMailBool(string mailConfig)
+        private static bool GetMailBool(string mailConfig)
         {
-            return string.IsNullOrEmpty(mailConfig) || Transfers.GetBool(mailConfig);
+            return string.IsNullOrEmpty(mailConfig) || GetBool(mailConfig);
         }
 
-        private PdfTarget GetPdfTarget(string pdfTarget)
+        private static PdfTarget GetPdfTarget(string pdfTarget)
         {
             return Enum.TryParse(pdfTarget, true, out PdfTarget pdfVersion) ? pdfVersion : PdfTarget.Pdf1_3;
         }
 
-        private bool GetPdfBool(object sourceObject)
+        private static bool GetPdfBool(object sourceObject)
         {
             var sourceString = string.Empty;
 
@@ -204,7 +266,7 @@ namespace Lurgle.Transfer.Classes
         /// </summary>
         /// <param name="ftpDestination">Retrieve the config for this destination</param>
         /// <returns></returns>
-        public TransferDestination GetSftpDestination(Destination ftpDestination)
+        public static TransferDestination GetSftpDestination(Destination ftpDestination)
         {
             var config = new TransferDestination
             {
@@ -214,13 +276,13 @@ namespace Lurgle.Transfer.Classes
                 AuthMode = GetFtpAuth(ftpDestination),
                 Name = ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpName"],
-                BufferSize = Transfers.GetInt(ConfigurationManager.AppSettings[
+                BufferSize = GetInt(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpBufferSize"]),
                 Server = ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpServer"],
-                Port = Transfers.GetInt(ConfigurationManager.AppSettings[
+                Port = GetInt(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpPort"]),
-                UsePassive = Transfers.GetBool(ConfigurationManager.AppSettings[
+                UsePassive = GetBool(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpUsePassive"]),
                 Path = ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpPath"],
@@ -230,24 +292,24 @@ namespace Lurgle.Transfer.Classes
                     $"{ftpDestination}SftpPassword"],
                 CertPath = ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpCertPath"],
-                RetryCount = Transfers.GetInt(ConfigurationManager.AppSettings[
+                RetryCount = GetInt(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpRetryCount"]),
-                RetryDelay = Transfers.GetInt(ConfigurationManager.AppSettings[
+                RetryDelay = GetInt(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpRetryDelay"]),
-                RetryTest = Transfers.GetBool(ConfigurationManager.AppSettings[
+                RetryTest = GetBool(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpRetryTest"]),
-                RetryFailAll = Transfers.GetBool(ConfigurationManager.AppSettings[
+                RetryFailAll = GetBool(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpRetryFailAll"]),
-                RetryFailConnect = Transfers.GetBool(ConfigurationManager.AppSettings[
+                RetryFailConnect = GetBool(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpRetryFailConnect"]),
-                UseProxy = Transfers.GetBool(ConfigurationManager.AppSettings[
+                UseProxy = GetBool(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpUseProxy"]),
                 ProxyServer =
                     ConfigurationManager.AppSettings[
                         $"{ftpDestination}SftpProxyServer"],
                 ProxyType = ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpProxyType"],
-                ProxyPort = Transfers.GetInt(ConfigurationManager.AppSettings[
+                ProxyPort = GetInt(ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpProxyPort"]),
                 ProxyUser = ConfigurationManager.AppSettings[
                     $"{ftpDestination}SftpProxyUser"],
@@ -269,10 +331,10 @@ namespace Lurgle.Transfer.Classes
                 MailIfSuccess = GetMailBool(ConfigurationManager.AppSettings[
                     $"{ftpDestination}MailIfSuccess"]),
                 DownloadDays =
-                    Transfers.GetInt(ConfigurationManager.AppSettings[
+                    GetInt(ConfigurationManager.AppSettings[
                         $"{ftpDestination}DownloadDays"]),
                 ConvertPdf =
-                    Transfers.GetBool(ConfigurationManager.AppSettings[
+                    GetBool(ConfigurationManager.AppSettings[
                         $"{ftpDestination}ConvertPdf"]),
                 PdfTarget = GetPdfTarget(ConfigurationManager.AppSettings[
                     $"{ftpDestination}PdfVersion"]),

@@ -24,13 +24,13 @@ namespace Lurgle.Transfer.Classes
     /// <summary>
     ///     SFTP/FTP instance
     /// </summary>
-    public class Transfer
+    public class FileTransfer
     {
         /// <summary>
         ///     SFTP/FTP instance
         /// </summary>
         /// <param name="config"></param>
-        public Transfer(TransferDestination config)
+        public FileTransfer(TransferDestination config)
         {
             TransferConfig = config;
             Destination = config.Destination;

@@ -45,50 +45,50 @@
                 Exception details
             </summary>
         </member>
-        <member name="T:Lurgle.Transfer.Classes.Transfer">
+        <member name="T:Lurgle.Transfer.Classes.FileTransfer">
             <summary>
                 SFTP/FTP instance
             </summary>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.Transfer.#ctor(Lurgle.Transfer.Classes.TransferDestination)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.#ctor(Lurgle.Transfer.Classes.TransferDestination)">
             <summary>
                 SFTP/FTP instance
             </summary>
             <param name="config"></param>
         </member>
-        <member name="P:Lurgle.Transfer.Classes.Transfer.TransferConfig">
+        <member name="P:Lurgle.Transfer.Classes.FileTransfer.TransferConfig">
             <summary>
                 SFTP Configuration
             </summary>
         </member>
-        <member name="P:Lurgle.Transfer.Classes.Transfer.SftpClient">
+        <member name="P:Lurgle.Transfer.Classes.FileTransfer.SftpClient">
             <summary>
                 SFTP Client
             </summary>
         </member>
-        <member name="P:Lurgle.Transfer.Classes.Transfer.UseCert">
+        <member name="P:Lurgle.Transfer.Classes.FileTransfer.UseCert">
             <summary>
                 Use a certificate for authentication
             </summary>
         </member>
-        <member name="P:Lurgle.Transfer.Classes.Transfer.Destination">
+        <member name="P:Lurgle.Transfer.Classes.FileTransfer.Destination">
             <summary>
                 Destination
             </summary>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.Transfer.Connect">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.Connect">
             <summary>
                 Connect to the configured SFTP server
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.Transfer.Disconnect">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.Disconnect">
             <summary>
                 Disconnect from the configured SFTP server
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.Transfer.ListSftp(System.String,System.Boolean)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.ListSftp(System.String,System.Boolean)">
             <summary>
                 List remote files
             </summary>
@@ -96,7 +96,7 @@
             <param name="listFolders"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.Transfer.DownloadSftp(System.String,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadSftp(System.String,System.String,System.String)">
             <summary>
                 Download files via SFTP
             </summary>
@@ -105,7 +105,7 @@
             <param name="filePath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.Transfer.SendSftp(System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendSftp(System.String,System.String)">
             <summary>
                 Send file via SFTP
             </summary>
@@ -118,14 +118,14 @@
                 Configuration
             </summary>
         </member>
-        <member name="P:Lurgle.Transfer.Classes.TransferConfig.ConfigPath">
-            <summary>
-                Configuration path
-            </summary>
-        </member>
         <member name="P:Lurgle.Transfer.Classes.TransferConfig.AppName">
             <summary>
                 App name
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.AppVersion">
+            <summary>
+                App version will be determined from the binary version, but can be overriden
             </summary>
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferConfig.SourcePath">
@@ -162,6 +162,24 @@
             <summary>
                 Load the currently configured config file
             </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetBool(System.Object)">
+            <summary>
+                Convert the supplied <see cref="T:System.Object" /> to a <see cref="T:System.Boolean" />
+                <para />
+                This will filter out nulls that could otherwise cause exceptions
+            </summary>
+            <param name="sourceObject">An object that can be converted to a bool</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetInt(System.Object)">
+            <summary>
+                Convert the supplied <see cref="T:System.Object" /> to an <see cref="T:System.Int32" />
+                <para />
+                This will filter out nulls that could otherwise cause exceptions
+            </summary>
+            <param name="sourceObject">An object that can be converted to an int</param>
+            <returns></returns>
         </member>
         <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetDestinations(System.String)">
             <summary>
@@ -972,14 +990,9 @@
                 Common functions
             </summary>
         </member>
-        <member name="P:Lurgle.Transfer.Transfers.AppName">
+        <member name="P:Lurgle.Transfer.Transfers.Config">
             <summary>
-                App name
-            </summary>
-        </member>
-        <member name="P:Lurgle.Transfer.Transfers.AppVersion">
-            <summary>
-                App version
+            Current Lurgle.Transfer configuration
             </summary>
         </member>
         <member name="M:Lurgle.Transfer.Transfers.SetConfig(Lurgle.Transfer.Classes.TransferConfig)">
@@ -987,22 +1000,11 @@
                 Set the logging config. This will only set/update the config if there is no LogWriter currently set.
             </summary>
         </member>
-        <member name="M:Lurgle.Transfer.Transfers.GetBool(System.Object)">
+        <member name="M:Lurgle.Transfer.Transfers.GetTransferConfig(Lurgle.Transfer.Enums.Destination)">
             <summary>
-                Convert the supplied <see cref="T:System.Object" /> to a <see cref="T:System.Boolean" />
-                <para />
-                This will filter out nulls that could otherwise cause exceptions
+            Retrieve a transfer destination
             </summary>
-            <param name="sourceObject">An object that can be converted to a bool</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Transfer.Transfers.GetInt(System.Object)">
-            <summary>
-                Convert the supplied <see cref="T:System.Object" /> to an <see cref="T:System.Int32" />
-                <para />
-                This will filter out nulls that could otherwise cause exceptions
-            </summary>
-            <param name="sourceObject">An object that can be converted to an int</param>
+            <param name="destination"></param>
             <returns></returns>
         </member>
     </members>
