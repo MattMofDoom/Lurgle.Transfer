@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Lurgle.Sftp.Classes;
-using Lurgle.Sftp.Enums;
+using Lurgle.Transfer.Classes;
+using Lurgle.Transfer.Enums;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Local
 
 // ReSharper disable UnusedMember.Global
 
-namespace Lurgle.Sftp
+namespace Lurgle.Transfer
 {
     /// <summary>
     ///     Local file handling
@@ -59,12 +60,12 @@ namespace Lurgle.Sftp
         /// </summary>
         /// <param name="sourceFile"></param>
         /// <returns></returns>
-        public static SftpInfo GetFileInfo(string sourceFile)
+        public static TransferInfo GetFileInfo(string sourceFile)
         {
             var fileAccess = File.GetLastAccessTimeUtc(sourceFile);
             var fileModify = File.GetLastWriteTimeUtc(sourceFile);
             var fileSize = new FileInfo(sourceFile).Length;
-            return new SftpInfo(sourceFile, fileAccess, fileModify, fileSize);
+            return new TransferInfo(sourceFile, fileAccess, fileModify, fileSize);
         }
 
         /// <summary>
@@ -72,13 +73,13 @@ namespace Lurgle.Sftp
         /// </summary>
         /// <param name="sourceFiles"></param>
         /// <returns></returns>
-        public static List<SftpInfo> GetFileInfo(IEnumerable<string> sourceFiles)
+        public static List<TransferInfo> GetFileInfo(IEnumerable<string> sourceFiles)
         {
             return (from file in sourceFiles
                 let fileAccess = File.GetLastAccessTimeUtc(file)
                 let fileModify = File.GetLastWriteTimeUtc(file)
                 let fileSize = new FileInfo(file).Length
-                select new SftpInfo(file, fileAccess, fileModify, fileSize)).ToList();
+                select new TransferInfo(file, fileAccess, fileModify, fileSize)).ToList();
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace Lurgle.Sftp
         /// </summary>
         /// <param name="sourcePath"></param>
         /// <returns></returns>
-        public static List<SftpInfo> GetFiles(string sourcePath)
+        public static List<TransferInfo> GetFiles(string sourcePath)
         {
             return GetFileInfo(Directory.GetFiles(sourcePath).ToList());
         }
@@ -96,7 +97,7 @@ namespace Lurgle.Sftp
         /// </summary>
         /// <param name="fileInfo"></param>
         /// <returns></returns>
-        public static List<string> GetFileList(IEnumerable<SftpInfo> fileInfo)
+        public static List<string> GetFileList(IEnumerable<TransferInfo> fileInfo)
         {
             return fileInfo.Select(file => Path.GetFileName(file.FileName)).ToList();
         }
@@ -143,7 +144,7 @@ namespace Lurgle.Sftp
         /// <param name="sourcePath"></param>
         /// <param name="zipPrefix"></param>
         /// <returns></returns>
-        public static CompressResult CompressFiles(CompressType compressType, IEnumerable<SftpInfo> sourceFiles,
+        public static CompressResult CompressFiles(CompressType compressType, IEnumerable<TransferInfo> sourceFiles,
             bool useConverted, string sourcePath, string zipPrefix = null)
         {
             var compressResult = new CompressResult(compressType);
@@ -162,8 +163,8 @@ namespace Lurgle.Sftp
                     break;
                 default:
                     compressResult.Status = CompressStatus.NotCompressed;
-                    compressResult.SourceFiles = sourceFiles as List<SftpInfo>;
-                    compressResult.DestFiles = sourceFiles as List<SftpInfo>;
+                    compressResult.SourceFiles = sourceFiles as List<TransferInfo>;
+                    compressResult.DestFiles = sourceFiles as List<TransferInfo>;
                     break;
             }
 
@@ -176,13 +177,13 @@ namespace Lurgle.Sftp
         /// <param name="sourceFiles"></param>
         /// <param name="useConverted"></param>
         /// <returns></returns>
-        private static CompressResult CompressGzip(IEnumerable<SftpInfo> sourceFiles, bool useConverted)
+        private static CompressResult CompressGzip(IEnumerable<TransferInfo> sourceFiles, bool useConverted)
         {
             var compressResult = new CompressResult(CompressType.Gzip) {Status = CompressStatus.Success};
 
             foreach (var sourceFile in sourceFiles)
                 if (!Path.GetExtension(sourceFile.FileName)
-                    .Equals(".gz", StringComparison.CurrentCultureIgnoreCase))
+                        .Equals(".gz", StringComparison.CurrentCultureIgnoreCase))
                     compressResult.SourceFiles.Add(sourceFile);
 
             //Compress each file for remote transfer
@@ -231,7 +232,7 @@ namespace Lurgle.Sftp
         /// <param name="sourcePath"></param>
         /// <param name="zipPrefix"></param>
         /// <returns></returns>
-        private static CompressResult CompressZip(IEnumerable<SftpInfo> sourceFiles, bool useConverted,
+        private static CompressResult CompressZip(IEnumerable<TransferInfo> sourceFiles, bool useConverted,
             string sourcePath,
             string zipPrefix = null)
         {
@@ -239,7 +240,7 @@ namespace Lurgle.Sftp
 
             foreach (var sourceFile in sourceFiles)
                 if (!Path.GetExtension(sourceFile.FileName)
-                    .Equals(".zip", StringComparison.CurrentCultureIgnoreCase))
+                        .Equals(".zip", StringComparison.CurrentCultureIgnoreCase))
                     compressResult.SourceFiles.Add(sourceFile);
 
             var timeNow = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -292,13 +293,13 @@ namespace Lurgle.Sftp
         /// <param name="sourceFiles"></param>
         /// <param name="useConverted"></param>
         /// <returns></returns>
-        private static CompressResult CompressZipMulti(IEnumerable<SftpInfo> sourceFiles, bool useConverted)
+        private static CompressResult CompressZipMulti(IEnumerable<TransferInfo> sourceFiles, bool useConverted)
         {
             var compressResult = new CompressResult(CompressType.Zip) {Status = CompressStatus.Success};
 
             foreach (var sourceFile in sourceFiles)
                 if (!Path.GetExtension(sourceFile.FileName)
-                    .Equals(".zip", StringComparison.CurrentCultureIgnoreCase))
+                        .Equals(".zip", StringComparison.CurrentCultureIgnoreCase))
                     compressResult.SourceFiles.Add(sourceFile);
 
             //Compress each file for remote transfer
@@ -378,7 +379,7 @@ namespace Lurgle.Sftp
 
             if (Directory.Exists(archivePath))
                 foreach (var filePath in Directory.GetFiles(archivePath).Where(fileName =>
-                    File.GetCreationTime(fileName) < DateTime.Now.AddDays(-archiveDays)).ToList())
+                             File.GetCreationTime(fileName) < DateTime.Now.AddDays(-archiveDays)).ToList())
                     try
                     {
                         archiveResult.LastFile = Path.GetFileName(filePath);

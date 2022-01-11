@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Lurgle.Sftp.Enums;
+using Lurgle.Transfer.Enums;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
-namespace Lurgle.Sftp.Classes
+namespace Lurgle.Transfer.Classes
 {
     /// <summary>
     ///     Compression result
@@ -20,8 +21,8 @@ namespace Lurgle.Sftp.Classes
         {
             Status = CompressStatus.Unknown;
             Type = compressType;
-            SourceFiles = new List<SftpInfo>();
-            DestFiles = new List<SftpInfo>();
+            SourceFiles = new List<TransferInfo>();
+            DestFiles = new List<TransferInfo>();
             ErrorDetails = null;
         }
 
@@ -38,12 +39,12 @@ namespace Lurgle.Sftp.Classes
         /// <summary>
         ///     Source files
         /// </summary>
-        public List<SftpInfo> SourceFiles { get; set; }
+        public List<TransferInfo> SourceFiles { get; set; }
 
         /// <summary>
         ///     Destination files
         /// </summary>
-        public List<SftpInfo> DestFiles { get; set; }
+        public List<TransferInfo> DestFiles { get; set; }
 
         /// <summary>
         ///     Last file seen

@@ -1,19 +1,20 @@
 ﻿// ReSharper disable UnusedMember.Global
-namespace Lurgle.Sftp.Enums
+
+namespace Lurgle.Transfer.Enums
 {
     /// <summary>
-    ///     Append a prefix or suffix
+    ///     Master list of transfer types
     /// </summary>
-    public enum AppendType
+    public enum TransferType
     {
         /// <summary>
-        ///     Prefix
+        ///     Upload
         /// </summary>
-        Prefix,
+        Upload,
 
         /// <summary>
-        ///     Suffix
+        ///     Download
         /// </summary>
-        Suffix
+        Download
     }
 }

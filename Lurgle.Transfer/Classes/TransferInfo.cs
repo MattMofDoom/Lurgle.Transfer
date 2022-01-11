@@ -1,14 +1,15 @@
 ﻿using System;
+
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Lurgle.Sftp.Classes
+namespace Lurgle.Transfer.Classes
 {
     /// <summary>
     ///     File attributes
     /// </summary>
-    public class SftpInfo
+    public class TransferInfo
     {
         /// <summary>
         ///     File attributes
@@ -17,7 +18,7 @@ namespace Lurgle.Sftp.Classes
         /// <param name="accessDate"></param>
         /// <param name="modifyDate"></param>
         /// <param name="fileSize"></param>
-        public SftpInfo(string file, DateTime accessDate, DateTime modifyDate, long fileSize)
+        public TransferInfo(string file, DateTime accessDate, DateTime modifyDate, long fileSize)
         {
             FileName = file;
             SourceFileName = file;

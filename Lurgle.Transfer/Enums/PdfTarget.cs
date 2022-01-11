@@ -1,9 +1,7 @@
-﻿
-
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 
-namespace Lurgle.Sftp.Enums
+namespace Lurgle.Transfer.Enums
 {
     /// <summary>
     ///     PDF Target Version

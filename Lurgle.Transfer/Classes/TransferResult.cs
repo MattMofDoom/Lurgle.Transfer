@@ -1,37 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using Lurgle.Sftp.Enums;
+using Lurgle.Transfer.Enums;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
-namespace Lurgle.Sftp.Classes
+namespace Lurgle.Transfer.Classes
 {
     /// <summary>
     ///     SFTP Result
     /// </summary>
-    public class SftpResult
+    public class TransferResult
     {
         /// <summary>
         ///     SFTP Result
         /// </summary>
         /// <param name="ftpDestination"></param>
         /// <param name="isCert"></param>
-        public SftpResult(Destination ftpDestination, bool isCert)
+        public TransferResult(Destination ftpDestination, bool isCert)
         {
             Destination = Destination.Unknown;
-            Status = SftpStatus.Unknown;
+            Status = TransferStatus.Unknown;
             FileSize = 0;
             UseCert = isCert;
             Destination = ftpDestination;
-            FileList = new List<SftpInfo>();
+            FileList = new List<TransferInfo>();
             ErrorDetails = null;
         }
 
         /// <summary>
         ///     SFTP Status
         /// </summary>
-        public SftpStatus Status { get; set; }
+        public TransferStatus Status { get; set; }
 
         /// <summary>
         ///     Remote File Size
@@ -51,7 +52,7 @@ namespace Lurgle.Sftp.Classes
         /// <summary>
         ///     File list
         /// </summary>
-        public List<SftpInfo> FileList { get; set; }
+        public List<TransferInfo> FileList { get; set; }
 
         /// <summary>
         ///     Exception details
