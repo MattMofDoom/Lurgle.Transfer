@@ -1,20 +1,26 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 
-using Lurgle.Sftp.Enums;
+using Lurgle.Transfer.Enums;
+
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
 
-namespace Lurgle.Sftp.Classes
+namespace Lurgle.Transfer.Classes
 {
     /// <summary>
     ///     SFTP configuration class
     /// </summary>
-    public class SftpConfig
+    public class TransferDestination
     {
         /// <summary>
         ///     Type of transfer
         /// </summary>
         public TransferType TransferType { get; set; }
+
+        /// <summary>
+        ///     Transfer mode (SFTP or FTP)
+        /// </summary>
+        public TransferMode TransferMode { get; set; }
 
         /// <summary>
         ///     Destination
@@ -24,7 +30,7 @@ namespace Lurgle.Sftp.Classes
         /// <summary>
         ///     Authentication mode
         /// </summary>
-        public SftpAuth AuthMode { get; set; }
+        public TransferAuth AuthMode { get; set; }
 
         /// <summary>
         ///     Transfer name
@@ -37,14 +43,19 @@ namespace Lurgle.Sftp.Classes
         public int BufferSize { get; set; }
 
         /// <summary>
-        ///     SFTP server
+        ///     SFTP/FTP server
         /// </summary>
         public string Server { get; set; }
 
         /// <summary>
-        ///     SFTP TCP port
+        ///     SFTP/FTP TCP port
         /// </summary>
         public int Port { get; set; }
+
+        /// <summary>
+        ///     For FTP, use Passive mode
+        /// </summary>
+        public bool UsePassive { get; set; }
 
         /// <summary>
         ///     Remote path

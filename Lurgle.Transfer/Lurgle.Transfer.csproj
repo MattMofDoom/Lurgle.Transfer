@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461;net47;net48;net5.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+    <Authors>Matt Marlor</Authors>
+    <Description>File transfer library that accelerates getting projects up and running with SSH.NET and FluentFTP!</Description>
+    <Copyright>Matt Marlor</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/MattMofDoom/Lurgle.Transfer</PackageProjectUrl>
+    <ApplicationIcon>Transfer.ico</ApplicationIcon>
+    <PackageIcon>Transfer.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Transfer</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>Lurgle FTP SFTP SSH SSH.NET FluentFTP File Transfer compression compressed uncompressed gzip zip</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>* Add XML documentation</PackageReleaseNotes>
+    <Product>Lurgle.Transfer</Product>
+    <PackageId>Lurgle.Transfer</PackageId>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyName>Lurgle.Transfer</AssemblyName>
+    <RootNamespace>Lurgle.Transfer</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>C:\Users\mattm\Source\repos\Lurgle.Transfer\Lurgle.Transfer\Lurgle.Transfer.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentFTP" Version="35.2.3" />
+    <PackageReference Include="Flurl" Version="3.0.2" />
+    <PackageReference Include="SSH.NET" Version="2020.0.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\Transfer.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

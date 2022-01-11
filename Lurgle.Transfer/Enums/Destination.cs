@@ -1,6 +1,6 @@
 ﻿// ReSharper disable UnusedMember.Global
 
-namespace Lurgle.Sftp.Enums
+namespace Lurgle.Transfer.Enums
 {
     /// <summary>
     ///     Enum containing all configurable SFTP destinations

@@ -1,9 +1,9 @@
-﻿namespace Lurgle.Sftp.Enums
+﻿namespace Lurgle.Transfer.Enums
 {
     /// <summary>
     ///     Master list of SFTP status results
     /// </summary>
-    public enum SftpStatus
+    public enum TransferStatus
     {
         /// <summary>
         ///     Success

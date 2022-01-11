@@ -1,20 +1,20 @@
 ﻿// ReSharper disable UnusedMember.Global
 
-namespace Lurgle.Sftp.Enums
+namespace Lurgle.Transfer.Enums
 {
     /// <summary>
-    ///     Master list of transfer types
+    ///     Allows selection of SFTP or FTP
     /// </summary>
-    public enum TransferType
+    public enum TransferMode
     {
         /// <summary>
-        ///     Upload
+        ///     SFTP (SSH)
         /// </summary>
-        Upload,
+        Sftp,
 
         /// <summary>
-        ///     Download
+        ///     FTP
         /// </summary>
-        Download
+        Ftp
     }
 }

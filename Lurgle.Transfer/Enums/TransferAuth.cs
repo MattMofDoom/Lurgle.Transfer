@@ -1,9 +1,9 @@
-﻿namespace Lurgle.Sftp.Enums
+﻿namespace Lurgle.Transfer.Enums
 {
     /// <summary>
     ///     SFTP authentication types
     /// </summary>
-    public enum SftpAuth
+    public enum TransferAuth
     {
         /// <summary>
         ///     Password authentication

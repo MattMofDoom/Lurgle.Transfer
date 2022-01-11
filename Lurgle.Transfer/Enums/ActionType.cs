@@ -1,6 +1,7 @@
 ﻿// ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
-namespace Lurgle.Sftp.Enums
+
+namespace Lurgle.Transfer.Enums
 {
     /// <summary>
     ///     Enum of all possible actions

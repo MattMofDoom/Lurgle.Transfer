@@ -1,4 +1,4 @@
-﻿namespace Lurgle.Sftp.Enums
+﻿namespace Lurgle.Transfer.Enums
 {
     /// <summary>
     ///     Master list of compression statuses

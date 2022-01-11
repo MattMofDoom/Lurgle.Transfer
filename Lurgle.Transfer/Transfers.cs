@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Reflection;
+using Lurgle.Transfer.Classes;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
-namespace Lurgle.Sftp
+namespace Lurgle.Transfer
 {
     /// <summary>
     ///     Common functions
     /// </summary>
-    public static class Common
+    public static class Transfers
     {
-        static Common()
+        static Transfers()
         {
             var isSuccess = true;
             try
@@ -49,6 +51,17 @@ namespace Lurgle.Sftp
         ///     App version
         /// </summary>
         public static string AppVersion { get; }
+
+        public static TransferConfig Config { get; set; }
+
+        /// <summary>
+        ///     Set the logging config. This will only set/update the config if there is no LogWriter currently set.
+        /// </summary>
+        public static void SetConfig(TransferConfig config = null)
+        {
+            Config = TransferConfig.GetConfig(config);
+        }
+
 
         /// <summary>
         ///     Convert the supplied <see cref="object" /> to a <see cref="bool" />
