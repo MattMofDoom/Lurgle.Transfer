@@ -4,91 +4,91 @@
         <name>Lurgle.Transfer</name>
     </assembly>
     <members>
-        <member name="T:Lurgle.Sftp.Classes.CompressResult">
+        <member name="T:Lurgle.Transfer.Classes.CompressResult">
             <summary>
                 Compression result
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.CompressResult.#ctor(Lurgle.Sftp.Enums.CompressType)">
+        <member name="M:Lurgle.Transfer.Classes.CompressResult.#ctor(Lurgle.Transfer.Enums.CompressType)">
             <summary>
                 Compression result
             </summary>
             <param name="compressType"></param>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.CompressResult.Status">
+        <member name="P:Lurgle.Transfer.Classes.CompressResult.Status">
             <summary>
                 Compression status
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.CompressResult.Type">
+        <member name="P:Lurgle.Transfer.Classes.CompressResult.Type">
             <summary>
                 Compression type
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.CompressResult.SourceFiles">
+        <member name="P:Lurgle.Transfer.Classes.CompressResult.SourceFiles">
             <summary>
                 Source files
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.CompressResult.DestFiles">
+        <member name="P:Lurgle.Transfer.Classes.CompressResult.DestFiles">
             <summary>
                 Destination files
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.CompressResult.LastFile">
+        <member name="P:Lurgle.Transfer.Classes.CompressResult.LastFile">
             <summary>
                 Last file seen
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.CompressResult.ErrorDetails">
+        <member name="P:Lurgle.Transfer.Classes.CompressResult.ErrorDetails">
             <summary>
                 Exception details
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Classes.Sftp">
+        <member name="T:Lurgle.Transfer.Classes.Transfer">
             <summary>
-                SFTP instance
+                SFTP/FTP instance
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.Sftp.#ctor(Lurgle.Sftp.Classes.SftpDestination)">
+        <member name="M:Lurgle.Transfer.Classes.Transfer.#ctor(Lurgle.Transfer.Classes.TransferDestination)">
             <summary>
-                SFTP instance
+                SFTP/FTP instance
             </summary>
             <param name="config"></param>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.Sftp.SftpConfig">
+        <member name="P:Lurgle.Transfer.Classes.Transfer.TransferConfig">
             <summary>
                 SFTP Configuration
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.Sftp.SftpClient">
+        <member name="P:Lurgle.Transfer.Classes.Transfer.SftpClient">
             <summary>
                 SFTP Client
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.Sftp.UseCert">
+        <member name="P:Lurgle.Transfer.Classes.Transfer.UseCert">
             <summary>
                 Use a certificate for authentication
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.Sftp.Destination">
+        <member name="P:Lurgle.Transfer.Classes.Transfer.Destination">
             <summary>
                 Destination
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.Sftp.Connect">
+        <member name="M:Lurgle.Transfer.Classes.Transfer.Connect">
             <summary>
                 Connect to the configured SFTP server
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.Sftp.Disconnect">
+        <member name="M:Lurgle.Transfer.Classes.Transfer.Disconnect">
             <summary>
                 Disconnect from the configured SFTP server
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.Sftp.ListSftp(System.String,System.Boolean)">
+        <member name="M:Lurgle.Transfer.Classes.Transfer.ListSftp(System.String,System.Boolean)">
             <summary>
                 List remote files
             </summary>
@@ -96,7 +96,7 @@
             <param name="listFolders"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.Sftp.DownloadSftp(System.String,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.Transfer.DownloadSftp(System.String,System.String,System.String)">
             <summary>
                 Download files via SFTP
             </summary>
@@ -105,7 +105,7 @@
             <param name="filePath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.Sftp.SendSftp(System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.Transfer.SendSftp(System.String,System.String)">
             <summary>
                 Send file via SFTP
             </summary>
@@ -113,291 +113,286 @@
             <param name="destFile"></param>
             <returns></returns>
         </member>
-        <member name="T:Lurgle.Sftp.Classes.SftpConfig">
+        <member name="T:Lurgle.Transfer.Classes.TransferConfig">
             <summary>
                 Configuration
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.ConfigPath">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.ConfigPath">
             <summary>
                 Configuration path
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.AppName">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.AppName">
             <summary>
                 App name
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.SourcePath">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.SourcePath">
             <summary>
                 Source path
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.DestPath">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.DestPath">
             <summary>
                 Destination path
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.DoArchive">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.DoArchive">
             <summary>
                 Do archival
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.ArchivePath">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.ArchivePath">
             <summary>
                 Archive path
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.ArchiveDays">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.ArchiveDays">
             <summary>
                 Days to retain files in archive
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpConfig.SftpDestinations">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.SftpDestinations">
             <summary>
                 List of SFTP destinations
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetConfig">
-            <summary>
-                Load a config file
-            </summary>
-        </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.LoadConfigFile">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetConfig(Lurgle.Transfer.Classes.TransferConfig)">
             <summary>
                 Load the currently configured config file
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetDestinations(System.String)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetDestinations(System.String)">
             <summary>
-                Parse a comma-delimited ftpDestinations <see cref="T:System.String" /> into a list of <see cref="T:Lurgle.Sftp.Enums.Destination" />
+                Parse a comma-delimited ftpDestinations <see cref="T:System.String" /> into a list of <see cref="T:Lurgle.Transfer.Enums.Destination" />
             </summary>
             <param name="configValue">Setting string (comma-delimited")</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetFtpAuth(Lurgle.Sftp.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetFtpAuth(Lurgle.Transfer.Enums.Destination)">
             <summary>
-                Return an <see cref="T:Lurgle.Sftp.Enums.SftpAuth" /> value for the specified <see cref="T:Lurgle.Sftp.Enums.Destination" />
+                Return an <see cref="T:Lurgle.Transfer.Enums.TransferAuth" /> value for the specified <see cref="T:Lurgle.Transfer.Enums.Destination" />
             </summary>
             <param name="ftpDestination">Retrieve the config for this destination</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetCompressType(System.String)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetCompressType(System.String)">
             <summary>
-                Parse the configured compresstype <see cref="T:System.String" /> into a <see cref="T:Lurgle.Sftp.Enums.CompressType" /> value
+                Parse the configured compresstype <see cref="T:System.String" /> into a <see cref="T:Lurgle.Transfer.Enums.CompressType" /> value
             </summary>
             <param name="configValue">Setting string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetTransferType(Lurgle.Sftp.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetTransferType(Lurgle.Transfer.Enums.Destination)">
             <summary>
-                Parse the configured transfertype <see cref="T:System.String" /> into a <see cref="T:Lurgle.Sftp.Enums.TransferType" /> value
+                Parse the configured transfertype <see cref="T:System.String" /> into a <see cref="T:Lurgle.Transfer.Enums.TransferType" /> value
             </summary>
             <param name="ftpDestination">Setting string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetTransferMode(Lurgle.Sftp.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetTransferMode(Lurgle.Transfer.Enums.Destination)">
             <summary>
-                Parse the configured TransferMode <see cref="T:System.String" /> into a <see cref="T:Lurgle.Sftp.Enums.TransferMode" /> value
+                Parse the configured TransferMode <see cref="T:System.String" /> into a <see cref="T:Lurgle.Transfer.Enums.TransferMode" /> value
             </summary>
             <param name="ftpDestination">Setting string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetMailBool(System.String)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetMailBool(System.String)">
             <summary>
                 Retrieves mailIfError or mailIfSuccess .. if not present in config, returns true
             </summary>
             <param name="mailConfig"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpConfig.GetSftpDestination(Lurgle.Sftp.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetSftpDestination(Lurgle.Transfer.Enums.Destination)">
             <summary>
-                Return an <see cref="T:Lurgle.Sftp.Classes.SftpDestination" /> value for the specified <see cref="T:Lurgle.Sftp.Enums.Destination" />
+                Return an <see cref="T:Lurgle.Transfer.Classes.TransferDestination" /> value for the specified <see cref="T:Lurgle.Transfer.Enums.Destination" />
             </summary>
             <param name="ftpDestination">Retrieve the config for this destination</param>
             <returns></returns>
         </member>
-        <member name="T:Lurgle.Sftp.Classes.SftpDestination">
+        <member name="T:Lurgle.Transfer.Classes.TransferDestination">
             <summary>
                 SFTP configuration class
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.TransferType">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.TransferType">
             <summary>
                 Type of transfer
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.TransferMode">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.TransferMode">
             <summary>
                 Transfer mode (SFTP or FTP)
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.Destination">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.Destination">
             <summary>
                 Destination
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.AuthMode">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.AuthMode">
             <summary>
                 Authentication mode
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.Name">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.Name">
             <summary>
                 Transfer name
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.BufferSize">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.BufferSize">
             <summary>
                 Buffer size
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.Server">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.Server">
             <summary>
                 SFTP/FTP server
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.Port">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.Port">
             <summary>
                 SFTP/FTP TCP port
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.UsePassive">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.UsePassive">
             <summary>
                 For FTP, use Passive mode
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.Path">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.Path">
             <summary>
                 Remote path
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.UserName">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.UserName">
             <summary>
                 Username
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.Password">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.Password">
             <summary>
                 Password
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.CertPath">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.CertPath">
             <summary>
                 Certificate file path for authentication
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.RetryCount">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.RetryCount">
             <summary>
                 Number of times to retry a file transfer before exiting with error
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.RetryDelay">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.RetryDelay">
             <summary>
                 Time in seconds to wait before retry
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.RetryTest">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.RetryTest">
             <summary>
                 Retry test mode - by default, first attempt will automatically be flagged as a failure
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.RetryFailAll">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.RetryFailAll">
             <summary>
                 If RetryTest is set, fail all retries
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.RetryFailConnect">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.RetryFailConnect">
             <summary>
                 If RetryTest is set, fail all connection attempts
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.UseProxy">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.UseProxy">
             <summary>
                 Use proxy server
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.ProxyType">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ProxyType">
             <summary>
                 Proxy type
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.ProxyServer">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ProxyServer">
             <summary>
                 Proxy server
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.ProxyPort">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ProxyPort">
             <summary>
                 Proxy server TCP port
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.ProxyUser">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ProxyUser">
             <summary>
                 Proxy username
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.ProxyPassword">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ProxyPassword">
             <summary>
                 Proxy password
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.CompressType">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.CompressType">
             <summary>
                 Compression type
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.ZipPrefix">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ZipPrefix">
             <summary>
                 Prefix for ZIP file
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.MailTo">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.MailTo">
             <summary>
-                Email address for notifications (Success, and Error if <see cref="P:Lurgle.Sftp.Classes.SftpDestination.MailToError" /> is not configured)
+                Email address for notifications (Success, and Error if <see cref="P:Lurgle.Transfer.Classes.TransferDestination.MailToError" /> is not configured)
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.MailToError">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.MailToError">
             <summary>
                 Email address for error notifications
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.MailIfError">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.MailIfError">
             <summary>
                 Send email notifications on error
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.MailIfSuccess">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.MailIfSuccess">
             <summary>
                 Send email notifications on success
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.DownloadDays">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.DownloadDays">
             <summary>
                 Maximum age of files to download
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.ConvertPdf">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ConvertPdf">
             <summary>
                 Convert PDFs to another PDF version before sending
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.PdfTarget">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.PdfTarget">
             <summary>
                 Target PDF version
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpDestination.PdfKeepOriginal">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.PdfKeepOriginal">
             <summary>
                 Keep the original PDF after conversion
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Classes.SftpInfo">
+        <member name="T:Lurgle.Transfer.Classes.TransferInfo">
             <summary>
                 File attributes
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpInfo.#ctor(System.String,System.DateTime,System.DateTime,System.Int64)">
+        <member name="M:Lurgle.Transfer.Classes.TransferInfo.#ctor(System.String,System.DateTime,System.DateTime,System.Int64)">
             <summary>
                 File attributes
             </summary>
@@ -406,539 +401,506 @@
             <param name="modifyDate"></param>
             <param name="fileSize"></param>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpInfo.FileName">
+        <member name="P:Lurgle.Transfer.Classes.TransferInfo.FileName">
             <summary>
                 File name
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpInfo.SourceFileName">
+        <member name="P:Lurgle.Transfer.Classes.TransferInfo.SourceFileName">
             <summary>
                 Source file name
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpInfo.AccessedDate">
+        <member name="P:Lurgle.Transfer.Classes.TransferInfo.AccessedDate">
             <summary>
                 Last access date
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpInfo.ModifiedDate">
+        <member name="P:Lurgle.Transfer.Classes.TransferInfo.ModifiedDate">
             <summary>
                 Last modified date
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpInfo.Size">
+        <member name="P:Lurgle.Transfer.Classes.TransferInfo.Size">
             <summary>
                 File size
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Classes.SftpResult">
+        <member name="T:Lurgle.Transfer.Classes.TransferResult">
             <summary>
                 SFTP Result
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Classes.SftpResult.#ctor(Lurgle.Sftp.Enums.Destination,System.Boolean)">
+        <member name="M:Lurgle.Transfer.Classes.TransferResult.#ctor(Lurgle.Transfer.Enums.Destination,System.Boolean)">
             <summary>
                 SFTP Result
             </summary>
             <param name="ftpDestination"></param>
             <param name="isCert"></param>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpResult.Status">
+        <member name="P:Lurgle.Transfer.Classes.TransferResult.Status">
             <summary>
                 SFTP Status
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpResult.FileSize">
+        <member name="P:Lurgle.Transfer.Classes.TransferResult.FileSize">
             <summary>
                 Remote File Size
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpResult.UseCert">
+        <member name="P:Lurgle.Transfer.Classes.TransferResult.UseCert">
             <summary>
                 Use certificate authentication
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpResult.Destination">
+        <member name="P:Lurgle.Transfer.Classes.TransferResult.Destination">
             <summary>
                 Destination
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpResult.FileList">
+        <member name="P:Lurgle.Transfer.Classes.TransferResult.FileList">
             <summary>
                 File list
             </summary>
         </member>
-        <member name="P:Lurgle.Sftp.Classes.SftpResult.ErrorDetails">
+        <member name="P:Lurgle.Transfer.Classes.TransferResult.ErrorDetails">
             <summary>
                 Exception details
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Common">
-            <summary>
-                Common functions
-            </summary>
-        </member>
-        <member name="P:Lurgle.Sftp.Common.AppName">
-            <summary>
-                App name
-            </summary>
-        </member>
-        <member name="P:Lurgle.Sftp.Common.AppVersion">
-            <summary>
-                App version
-            </summary>
-        </member>
-        <member name="M:Lurgle.Sftp.Common.GetBool(System.Object)">
-            <summary>
-                Convert the supplied <see cref="T:System.Object" /> to a <see cref="T:System.Boolean" />
-                <para />
-                This will filter out nulls that could otherwise cause exceptions
-            </summary>
-            <param name="sourceObject">An object that can be converted to a bool</param>
-            <returns></returns>
-        </member>
-        <member name="M:Lurgle.Sftp.Common.GetInt(System.Object)">
-            <summary>
-                Convert the supplied <see cref="T:System.Object" /> to an <see cref="T:System.Int32" />
-                <para />
-                This will filter out nulls that could otherwise cause exceptions
-            </summary>
-            <param name="sourceObject">An object that can be converted to an int</param>
-            <returns></returns>
-        </member>
-        <member name="T:Lurgle.Sftp.Enums.ActionType">
+        <member name="T:Lurgle.Transfer.Enums.ActionType">
             <summary>
                 Enum of all possible actions
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ActionType.Compression">
+        <member name="F:Lurgle.Transfer.Enums.ActionType.Compression">
             <summary>
                 Compression
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ActionType.Connection">
+        <member name="F:Lurgle.Transfer.Enums.ActionType.Connection">
             <summary>
                 Connection
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ActionType.Upload">
+        <member name="F:Lurgle.Transfer.Enums.ActionType.Upload">
             <summary>
                 Upload
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ActionType.Download">
+        <member name="F:Lurgle.Transfer.Enums.ActionType.Download">
             <summary>
                 Download
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ActionType.Conversion">
+        <member name="F:Lurgle.Transfer.Enums.ActionType.Conversion">
             <summary>
                 PDF Conversion
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ActionType.Initialisation">
+        <member name="F:Lurgle.Transfer.Enums.ActionType.Initialisation">
             <summary>
                 Initialisation
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.AppendType">
+        <member name="T:Lurgle.Transfer.Enums.AppendType">
             <summary>
                 Append a prefix or suffix
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.AppendType.Prefix">
+        <member name="F:Lurgle.Transfer.Enums.AppendType.Prefix">
             <summary>
                 Prefix
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.AppendType.Suffix">
+        <member name="F:Lurgle.Transfer.Enums.AppendType.Suffix">
             <summary>
                 Suffix
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.CompressStatus">
+        <member name="T:Lurgle.Transfer.Enums.CompressStatus">
             <summary>
                 Master list of compression statuses
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressStatus.Success">
+        <member name="F:Lurgle.Transfer.Enums.CompressStatus.Success">
             <summary>
                 Success
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressStatus.Error">
+        <member name="F:Lurgle.Transfer.Enums.CompressStatus.Error">
             <summary>
                 Error
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressStatus.NotCompressed">
+        <member name="F:Lurgle.Transfer.Enums.CompressStatus.NotCompressed">
             <summary>
                 Not Compressed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressStatus.PathNotFound">
+        <member name="F:Lurgle.Transfer.Enums.CompressStatus.PathNotFound">
             <summary>
                 Path not found
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressStatus.Unknown">
+        <member name="F:Lurgle.Transfer.Enums.CompressStatus.Unknown">
             <summary>
                 Unknown/not specified
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.CompressType">
+        <member name="T:Lurgle.Transfer.Enums.CompressType">
             <summary>
                 Master list of compression types
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressType.Uncompressed">
+        <member name="F:Lurgle.Transfer.Enums.CompressType.Uncompressed">
             <summary>
                 Uncompressed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressType.Gzip">
+        <member name="F:Lurgle.Transfer.Enums.CompressType.Gzip">
             <summary>
                 Gzip
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressType.Zip">
+        <member name="F:Lurgle.Transfer.Enums.CompressType.Zip">
             <summary>
                 Zip
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.CompressType.ZipPerFile">
+        <member name="F:Lurgle.Transfer.Enums.CompressType.ZipPerFile">
             <summary>
                 Zip file for each file
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.Destination">
+        <member name="T:Lurgle.Transfer.Enums.Destination">
             <summary>
                 Enum containing all configurable SFTP destinations
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.Destination.First">
+        <member name="F:Lurgle.Transfer.Enums.Destination.First">
             <summary>
                 First destination
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.Destination.Second">
+        <member name="F:Lurgle.Transfer.Enums.Destination.Second">
             <summary>
                 Second destination
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.Destination.Third">
+        <member name="F:Lurgle.Transfer.Enums.Destination.Third">
             <summary>
                 Third destination
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.Destination.Fourth">
+        <member name="F:Lurgle.Transfer.Enums.Destination.Fourth">
             <summary>
                 Fourth destination
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.Destination.Fifth">
+        <member name="F:Lurgle.Transfer.Enums.Destination.Fifth">
             <summary>
                 Fifth destination
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.Destination.Unknown">
+        <member name="F:Lurgle.Transfer.Enums.Destination.Unknown">
             <summary>
                 Destination unknown/not specified
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.EmailTemplate">
+        <member name="T:Lurgle.Transfer.Enums.EmailTemplate">
             <summary>
                 Master list of Email templates
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.EmailTemplate.Error">
+        <member name="F:Lurgle.Transfer.Enums.EmailTemplate.Error">
             <summary>
                 Error template
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.EmailTemplate.Notification">
+        <member name="F:Lurgle.Transfer.Enums.EmailTemplate.Notification">
             <summary>
                 Notification template
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.EmailType">
+        <member name="T:Lurgle.Transfer.Enums.EmailType">
             <summary>
                 Master list of Email types
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.EmailType.Sent">
+        <member name="F:Lurgle.Transfer.Enums.EmailType.Sent">
             <summary>
                 File Sent notifications
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.EmailType.Error">
+        <member name="F:Lurgle.Transfer.Enums.EmailType.Error">
             <summary>
                 Error notifications
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.EmailType.Exception">
+        <member name="F:Lurgle.Transfer.Enums.EmailType.Exception">
             <summary>
                 Exception notifications
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.EmailType.LogFailed">
+        <member name="F:Lurgle.Transfer.Enums.EmailType.LogFailed">
             <summary>
                 Logging failure notifications
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.ExitCodes">
+        <member name="T:Lurgle.Transfer.Enums.ExitCodes">
             <summary>
                 Exit codes
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.Success">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.Success">
             <summary>
                 Success
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.UnhandledException">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.UnhandledException">
             <summary>
                 Unhandled exception
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.CompressFailed">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.CompressFailed">
             <summary>
                 Compression phase failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.ConnectFailed">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.ConnectFailed">
             <summary>
                 Connection phase failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.TransferFailed">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.TransferFailed">
             <summary>
                 Transfer phase failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.CleanFailed">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.CleanFailed">
             <summary>
                 Cleanup phase failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.ArchiveFailed">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.ArchiveFailed">
             <summary>
                 Archive phase failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.UnreachableMailHost">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.UnreachableMailHost">
             <summary>
                 Mail host was unreachable
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.HelpDisplayed">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.HelpDisplayed">
             <summary>
                 SFTP Transfer displayed the Help dialog
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.ConvertFailed">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.ConvertFailed">
             <summary>
                 PDF conversion failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.AppException">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.AppException">
             <summary>
                 An application exception was intercepted
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.SourcePathFailure">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.SourcePathFailure">
             <summary>
                 Source path validation failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.DestPathFailure">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.DestPathFailure">
             <summary>
                 Destination path validation failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.ArchivePathFailure">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.ArchivePathFailure">
             <summary>
                 Archive path validation failed
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.ExitCodes.EmailError">
+        <member name="F:Lurgle.Transfer.Enums.ExitCodes.EmailError">
             <summary>
                 An email error occurred
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.FolderResult">
+        <member name="T:Lurgle.Transfer.Enums.FolderResult">
             <summary>
                 Result of folder validation
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.FolderResult.FolderExists">
+        <member name="F:Lurgle.Transfer.Enums.FolderResult.FolderExists">
             <summary>
                 Folder exists
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.FolderResult.FolderCreated">
+        <member name="F:Lurgle.Transfer.Enums.FolderResult.FolderCreated">
             <summary>
                 Folder created
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.FolderResult.ErrorCreatingFolder">
+        <member name="F:Lurgle.Transfer.Enums.FolderResult.ErrorCreatingFolder">
             <summary>
                 Error creating folder
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.PdfTarget">
+        <member name="T:Lurgle.Transfer.Enums.PdfTarget">
             <summary>
                 PDF Target Version
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.PdfTarget.Pdf1_3">
+        <member name="F:Lurgle.Transfer.Enums.PdfTarget.Pdf1_3">
             <summary>
                 PDF 1.3
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.PdfTarget.Pdf1_4">
+        <member name="F:Lurgle.Transfer.Enums.PdfTarget.Pdf1_4">
             <summary>
                 PDF 1.4
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.PdfTarget.Pdf1_5">
+        <member name="F:Lurgle.Transfer.Enums.PdfTarget.Pdf1_5">
             <summary>
                 PDF 1.5
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.PdfTarget.Pdf1_6">
+        <member name="F:Lurgle.Transfer.Enums.PdfTarget.Pdf1_6">
             <summary>
                 PDF 1.6
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.PdfTarget.Pdf1_7">
+        <member name="F:Lurgle.Transfer.Enums.PdfTarget.Pdf1_7">
             <summary>
                 PDF 1.7
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.SftpAuth">
+        <member name="T:Lurgle.Transfer.Enums.TransferAuth">
             <summary>
                 SFTP authentication types
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.SftpAuth.Password">
+        <member name="F:Lurgle.Transfer.Enums.TransferAuth.Password">
             <summary>
                 Password authentication
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.SftpAuth.Certificate">
+        <member name="F:Lurgle.Transfer.Enums.TransferAuth.Certificate">
             <summary>
                 Certificate authentication
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.SftpAuth.Both">
+        <member name="F:Lurgle.Transfer.Enums.TransferAuth.Both">
             <summary>
                 Password and Certificate authentication
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.SftpStatus">
-            <summary>
-                Master list of SFTP status results
-            </summary>
-        </member>
-        <member name="F:Lurgle.Sftp.Enums.SftpStatus.Success">
-            <summary>
-                Success
-            </summary>
-        </member>
-        <member name="F:Lurgle.Sftp.Enums.SftpStatus.Error">
-            <summary>
-                Error
-            </summary>
-        </member>
-        <member name="F:Lurgle.Sftp.Enums.SftpStatus.Unknown">
-            <summary>
-                Unknown
-            </summary>
-        </member>
-        <member name="T:Lurgle.Sftp.Enums.TransferMode">
+        <member name="T:Lurgle.Transfer.Enums.TransferMode">
             <summary>
                 Allows selection of SFTP or FTP
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.TransferMode.Sftp">
+        <member name="F:Lurgle.Transfer.Enums.TransferMode.Sftp">
             <summary>
                 SFTP (SSH)
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.TransferMode.Ftp">
+        <member name="F:Lurgle.Transfer.Enums.TransferMode.Ftp">
             <summary>
                 FTP
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Enums.TransferType">
+        <member name="T:Lurgle.Transfer.Enums.TransferStatus">
+            <summary>
+                Master list of SFTP status results
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.TransferStatus.Success">
+            <summary>
+                Success
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.TransferStatus.Error">
+            <summary>
+                Error
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.TransferStatus.Unknown">
+            <summary>
+                Unknown
+            </summary>
+        </member>
+        <member name="T:Lurgle.Transfer.Enums.TransferType">
             <summary>
                 Master list of transfer types
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.TransferType.Upload">
+        <member name="F:Lurgle.Transfer.Enums.TransferType.Upload">
             <summary>
                 Upload
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Enums.TransferType.Download">
+        <member name="F:Lurgle.Transfer.Enums.TransferType.Download">
             <summary>
                 Download
             </summary>
         </member>
-        <member name="T:Lurgle.Sftp.Files">
+        <member name="T:Lurgle.Transfer.Files">
             <summary>
                 Local file handling
             </summary>
         </member>
-        <member name="F:Lurgle.Sftp.Files.FolderSuccess">
+        <member name="F:Lurgle.Transfer.Files.FolderSuccess">
             <summary>
                 Successful folder validation results
             </summary>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetFileName(System.String)">
+        <member name="M:Lurgle.Transfer.Files.GetFileName(System.String)">
             <summary>
                 Extension of Path.GetFileName for use in RazorLight templates
             </summary>
             <param name="filePath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetFolder(System.String)">
+        <member name="M:Lurgle.Transfer.Files.GetFolder(System.String)">
             <summary>
                 Validate a given filePath
             </summary>
             <param name="filePath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetFileInfo(System.String)">
+        <member name="M:Lurgle.Transfer.Files.GetFileInfo(System.String)">
             <summary>
                 Retrieve file attributes
             </summary>
             <param name="sourceFile"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetFileInfo(System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Lurgle.Transfer.Files.GetFileInfo(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Retrieve file attributes
             </summary>
             <param name="sourceFiles"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetFiles(System.String)">
+        <member name="M:Lurgle.Transfer.Files.GetFiles(System.String)">
             <summary>
                 Retrieve a list of files and attributes from a given path
             </summary>
             <param name="sourcePath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetFileList(System.Collections.Generic.IEnumerable{Lurgle.Sftp.Classes.SftpInfo})">
+        <member name="M:Lurgle.Transfer.Files.GetFileList(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo})">
             <summary>
                 Retrieve a list of files from a given path
             </summary>
             <param name="fileInfo"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetNewName(System.String,Lurgle.Sftp.Enums.AppendType)">
+        <member name="M:Lurgle.Transfer.Files.GetNewName(System.String,Lurgle.Transfer.Enums.AppendType)">
             <summary>
                 Add a random number to the beginning of a file name
             </summary>
@@ -946,13 +908,13 @@
             <param name="appendType"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.GetRandomNumber">
+        <member name="M:Lurgle.Transfer.Files.GetRandomNumber">
             <summary>
                 returns random number
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.CompressFiles(Lurgle.Sftp.Enums.CompressType,System.Collections.Generic.IEnumerable{Lurgle.Sftp.Classes.SftpInfo},System.Boolean,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Files.CompressFiles(Lurgle.Transfer.Enums.CompressType,System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.String,System.String)">
             <summary>
                 Compress files given a configured compression type
             </summary>
@@ -963,7 +925,7 @@
             <param name="zipPrefix"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.CompressGzip(System.Collections.Generic.IEnumerable{Lurgle.Sftp.Classes.SftpInfo},System.Boolean)">
+        <member name="M:Lurgle.Transfer.Files.CompressGzip(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean)">
             <summary>
                 Compress files to Gzip archives
             </summary>
@@ -971,7 +933,7 @@
             <param name="useConverted"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.CompressZip(System.Collections.Generic.IEnumerable{Lurgle.Sftp.Classes.SftpInfo},System.Boolean,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Files.CompressZip(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.String,System.String)">
             <summary>
                 Compress files to a ZIP archive
             </summary>
@@ -981,7 +943,7 @@
             <param name="zipPrefix"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.CompressZipMulti(System.Collections.Generic.IEnumerable{Lurgle.Sftp.Classes.SftpInfo},System.Boolean)">
+        <member name="M:Lurgle.Transfer.Files.CompressZipMulti(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean)">
             <summary>
                 Compress files to individual ZIP files
             </summary>
@@ -989,7 +951,7 @@
             <param name="useConverted"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.ArchiveFiles(System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Files.ArchiveFiles(System.String,System.String)">
             <summary>
                 Move files to an archive folder
             </summary>
@@ -997,12 +959,50 @@
             <param name="destPath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Sftp.Files.DoCleanup(System.String,System.Int32)">
+        <member name="M:Lurgle.Transfer.Files.DoCleanup(System.String,System.Int32)">
             <summary>
                 Remove archived files after a given number of days
             </summary>
             <param name="archivePath"></param>
             <param name="archiveDays"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Lurgle.Transfer.Transfers">
+            <summary>
+                Common functions
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Transfers.AppName">
+            <summary>
+                App name
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Transfers.AppVersion">
+            <summary>
+                App version
+            </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Transfers.SetConfig(Lurgle.Transfer.Classes.TransferConfig)">
+            <summary>
+                Set the logging config. This will only set/update the config if there is no LogWriter currently set.
+            </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Transfers.GetBool(System.Object)">
+            <summary>
+                Convert the supplied <see cref="T:System.Object" /> to a <see cref="T:System.Boolean" />
+                <para />
+                This will filter out nulls that could otherwise cause exceptions
+            </summary>
+            <param name="sourceObject">An object that can be converted to a bool</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Transfers.GetInt(System.Object)">
+            <summary>
+                Convert the supplied <see cref="T:System.Object" /> to an <see cref="T:System.Int32" />
+                <para />
+                This will filter out nulls that could otherwise cause exceptions
+            </summary>
+            <param name="sourceObject">An object that can be converted to an int</param>
             <returns></returns>
         </member>
     </members>
