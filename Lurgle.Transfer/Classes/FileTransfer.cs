@@ -236,7 +236,15 @@ namespace Lurgle.Transfer.Classes
             var listFiles = new List<TransferInfo>();
             try
             {
-                if (!SftpClient.IsConnected) SftpClient.Connect();
+                switch (TransferConfig.TransferMode)
+                {
+                    case TransferMode.Sftp when !SftpClient.IsConnected:
+                        SftpClient.Connect();
+                        break;
+                    case TransferMode.Ftp when !FtpClient.IsConnected:
+                        FtpClient.Connect();
+                        break;
+                }
 
                 switch (TransferConfig.TransferMode)
                 {
@@ -290,7 +298,15 @@ namespace Lurgle.Transfer.Classes
 
             try
             {
-                if (!SftpClient.IsConnected) SftpClient.Connect();
+                switch (TransferConfig.TransferMode)
+                {
+                    case TransferMode.Sftp when !SftpClient.IsConnected:
+                        SftpClient.Connect();
+                        break;
+                    case TransferMode.Ftp when !FtpClient.IsConnected:
+                        FtpClient.Connect();
+                        break;
+                }
 
                 var remoteFile = Url.Combine(remotePath, fileName);
                 var destFile = Path.Combine(filePath, fileName);
@@ -341,7 +357,15 @@ namespace Lurgle.Transfer.Classes
 
             try
             {
-                if (!SftpClient.IsConnected) SftpClient.Connect();
+                switch (TransferConfig.TransferMode)
+                {
+                    case TransferMode.Sftp when !SftpClient.IsConnected:
+                        SftpClient.Connect();
+                        break;
+                    case TransferMode.Ftp when !FtpClient.IsConnected:
+                        FtpClient.Connect();
+                        break;
+                }
 
                 var sftpPath = Url.Combine(TransferConfig.RemotePath, Path.GetFileName(destFile));
                 var transferFile = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read,
