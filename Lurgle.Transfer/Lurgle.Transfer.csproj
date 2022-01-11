@@ -14,12 +14,12 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle FTP SFTP SSH SSH.NET FluentFTP File Transfer compression compressed uncompressed gzip zip</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>* Add XML documentation</PackageReleaseNotes>
+    <Version>1.1.0</Version>
+    <PackageReleaseNotes>* Add XML documentation
+* Rename to Lurgle.Transfer
+* Add FluentFTP logic</PackageReleaseNotes>
     <Product>Lurgle.Transfer</Product>
     <PackageId>Lurgle.Transfer</PackageId>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
     <AssemblyName>Lurgle.Transfer</AssemblyName>
     <RootNamespace>Lurgle.Transfer</RootNamespace>
   </PropertyGroup>
