@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using Lurgle.Transfer.Enums;
 
@@ -59,9 +60,9 @@ namespace Lurgle.Transfer.Classes
         public int ArchiveDays { get; private set; }
 
         /// <summary>
-        ///     List of SFTP destinations
+        ///     Transfer destinations
         /// </summary>
-        public List<Destination> SftpDestinations { get; private set; }
+        public Dictionary<string, TransferDestination> TransferDestinations { get; private set; }
 
         /// <summary>
         ///     Load the currently configured config file
@@ -80,7 +81,7 @@ namespace Lurgle.Transfer.Classes
                                 GetBool(ConfigurationManager.AppSettings["DoArchive"]),
                     ArchivePath = ConfigurationManager.AppSettings["ArchivePath"],
                     ArchiveDays = GetInt(ConfigurationManager.AppSettings["ArchiveDays"]),
-                    SftpDestinations = GetDestinations(ConfigurationManager.AppSettings["SftpDestinations"])
+                    TransferDestinations = GetDestinations()
                 };
             else
                 transferConfig = config;
@@ -113,6 +114,7 @@ namespace Lurgle.Transfer.Classes
                     //We surrender ...
                     transferConfig.AppVersion = string.Empty;
                 }
+
             if (transferConfig.ArchiveDays.Equals(-1) || transferConfig.ArchiveDays < ArchiveDaysMin ||
                 transferConfig.ArchiveDays > ArchiveDaysMax)
                 transferConfig.ArchiveDays = ArchiveDaysDefault;
@@ -133,7 +135,7 @@ namespace Lurgle.Transfer.Classes
         {
             var sourceString = string.Empty;
 
-            if (!Convert.IsDBNull(sourceObject)) sourceString = (string)sourceObject;
+            if (!Convert.IsDBNull(sourceObject)) sourceString = (string) sourceObject;
 
             return bool.TryParse(sourceString, out var destBool) && destBool;
         }
@@ -149,7 +151,7 @@ namespace Lurgle.Transfer.Classes
         {
             var sourceString = string.Empty;
 
-            if (!Convert.IsDBNull(sourceObject)) sourceString = (string)sourceObject;
+            if (!Convert.IsDBNull(sourceObject)) sourceString = (string) sourceObject;
 
             if (int.TryParse(sourceString, out var destInt)) return destInt;
 
@@ -157,31 +159,39 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
-        ///     Parse a comma-delimited ftpDestinations <see cref="string" /> into a list of <see cref="Destination" />
+        ///     Parse a comma-delimited TransferDestinations <see cref="string" /> into a list of destination configs
         /// </summary>
-        /// <param name="configValue">Setting string (comma-delimited")</param>
         /// <returns></returns>
-        private static List<Destination> GetDestinations(string configValue)
+        private static Dictionary<string, TransferDestination> GetDestinations()
         {
-            var destinations = new List<Destination>();
+            var result = new Dictionary<string, TransferDestination>();
+            var configValue = ConfigurationManager.AppSettings["TransferDestinations"];
+            //Backward compatibility
+            if (string.IsNullOrEmpty(configValue))
+                configValue = ConfigurationManager.AppSettings["SftpDestinations"];
 
-            foreach (var destination in configValue.Split(','))
-                if (Enum.TryParse(destination, true, out Destination destinationValue))
-                    destinations.Add(destinationValue);
+            var destinations = configValue.Split(',').ToList();
 
-            return destinations;
+            foreach (var destination in destinations)
+            {
+                var destConfig = GetTransferDestination(destination);
+                if (!string.IsNullOrEmpty(destConfig.Name))
+                    result.Add(destination, destConfig);
+            }
+
+            return result;
         }
 
         /// <summary>
-        ///     Return an <see cref="TransferAuth" /> value for the specified <see cref="Destination" />
+        ///     Return an <see cref="TransferAuth" /> value for the specified destination
         /// </summary>
-        /// <param name="ftpDestination">Retrieve the config for this destination</param>
+        /// <param name="destination">Retrieve the config for this destination</param>
         /// <returns></returns>
-        private static TransferAuth GetFtpAuth(Destination ftpDestination)
+        private static TransferAuth GetFtpAuth(string destination)
         {
             return Enum.TryParse(
                 ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpAuthMode"], true,
+                    $"{destination}SftpAuthMode"], true,
                 out TransferAuth ftpAuth)
                 ? ftpAuth
                 : TransferAuth.Password;
@@ -202,18 +212,18 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Parse the configured transfertype <see cref="string" /> into a <see cref="TransferType" /> value
         /// </summary>
-        /// <param name="ftpDestination">Setting string</param>
+        /// <param name="destination">Setting string</param>
         /// <returns></returns>
-        private static TransferType GetTransferType(Destination ftpDestination)
+        private static TransferType GetTransferType(string destination)
         {
-            //Allow configs using the old incorrect config line (xTransferType instead of xSftpTransferType") to still work 
             var configLine =
                 ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpTransferType"];
+                    $"{destination}TransferType"];
+            //Backward compatibility
             if (string.IsNullOrEmpty(configLine))
                 configLine =
                     ConfigurationManager.AppSettings[
-                        $"{ftpDestination}TransferType"];
+                        $"{destination}SftpTransferType"];
 
             return Enum.TryParse(configLine, true, out TransferType transferType) ? transferType : TransferType.Upload;
         }
@@ -221,18 +231,13 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Parse the configured TransferMode <see cref="string" /> into a <see cref="TransferMode" /> value
         /// </summary>
-        /// <param name="ftpDestination">Setting string</param>
+        /// <param name="destination">Setting string</param>
         /// <returns></returns>
-        private static TransferMode GetTransferMode(Destination ftpDestination)
+        private static TransferMode GetTransferMode(string destination)
         {
-            //Allow configs using the old incorrect config line (xTransferMode instead of xSftpTransferMode") to still work 
             var configLine =
                 ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpTransferMode"];
-            if (string.IsNullOrEmpty(configLine))
-                configLine =
-                    ConfigurationManager.AppSettings[
-                        $"{ftpDestination}TransferMode"];
+                    $"{destination}TransferMode"];
 
             return Enum.TryParse(configLine, true, out TransferMode transferMode) ? transferMode : TransferMode.Sftp;
         }
@@ -262,85 +267,181 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
-        ///     Return an <see cref="TransferDestination" /> value for the specified <see cref="Destination" />
+        ///     Return an <see cref="TransferDestination" /> value for the specified destination
         /// </summary>
-        /// <param name="ftpDestination">Retrieve the config for this destination</param>
+        /// <param name="destination">Retrieve the config for this destination</param>
         /// <returns></returns>
-        public static TransferDestination GetSftpDestination(Destination ftpDestination)
+        public static TransferDestination GetTransferDestination(string destination)
         {
             var config = new TransferDestination
             {
-                TransferType = GetTransferType(ftpDestination),
-                TransferMode = GetTransferMode(ftpDestination),
-                Destination = ftpDestination,
-                AuthMode = GetFtpAuth(ftpDestination),
+                Destination = destination,
+                TransferType = GetTransferType(destination),
+                TransferMode = GetTransferMode(destination),
+                AuthMode = GetFtpAuth(destination),
                 Name = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpName"],
+                    $"{destination}Name"],
                 BufferSize = GetInt(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpBufferSize"]),
+                    $"{destination}BufferSize"]),
                 Server = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpServer"],
+                    $"{destination}Server"],
                 Port = GetInt(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpPort"]),
+                    $"{destination}Port"]),
                 UsePassive = GetBool(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpUsePassive"]),
-                Path = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpPath"],
+                    $"{destination}UsePassive"]),
+                RemotePath = ConfigurationManager.AppSettings[
+                    $"{destination}RemotePath"],
+                SourcePath = ConfigurationManager.AppSettings[
+                    $"{destination}SourcePath"],
+                DestPath = ConfigurationManager.AppSettings[
+                    $"{destination}DestPath"],
+                DoArchive = GetBool(ConfigurationManager.AppSettings[
+                    $"{destination}DoArchive"]),
+                ArchivePath = ConfigurationManager.AppSettings[
+                    $"{destination}ArchivePath"],
+                ArchiveDays = GetInt(ConfigurationManager.AppSettings[
+                    $"{destination}ArchiveDays"]),
                 UserName = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpUserName"],
+                    $"{destination}UserName"],
                 Password = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpPassword"],
+                    $"{destination}Password"],
                 CertPath = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpCertPath"],
+                    $"{destination}CertPath"],
                 RetryCount = GetInt(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpRetryCount"]),
+                    $"{destination}RetryCount"]),
                 RetryDelay = GetInt(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpRetryDelay"]),
+                    $"{destination}RetryDelay"]),
                 RetryTest = GetBool(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpRetryTest"]),
+                    $"{destination}RetryTest"]),
                 RetryFailAll = GetBool(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpRetryFailAll"]),
+                    $"{destination}RetryFailAll"]),
                 RetryFailConnect = GetBool(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpRetryFailConnect"]),
+                    $"{destination}RetryFailConnect"]),
                 UseProxy = GetBool(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpUseProxy"]),
+                    $"{destination}UseProxy"]),
                 ProxyServer =
                     ConfigurationManager.AppSettings[
-                        $"{ftpDestination}SftpProxyServer"],
+                        $"{destination}ProxyServer"],
                 ProxyType = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpProxyType"],
+                    $"{destination}ProxyType"],
                 ProxyPort = GetInt(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpProxyPort"]),
+                    $"{destination}ProxyPort"]),
                 ProxyUser = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}SftpProxyUser"],
+                    $"{destination}ProxyUser"],
                 ProxyPassword =
                     ConfigurationManager.AppSettings[
-                        $"{ftpDestination}SftpProxyPassword"],
+                        $"{destination}ProxyPassword"],
                 CompressType = GetCompressType(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}CompressType"]),
+                    $"{destination}CompressType"]),
                 ZipPrefix = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}ZipPrefix"],
+                    $"{destination}ZipPrefix"],
                 MailTo = ConfigurationManager.AppSettings[
-                    $"{ftpDestination}MailTo"],
+                    $"{destination}MailTo"],
                 MailToError =
                     ConfigurationManager.AppSettings[
-                        $"{ftpDestination}MailToError"],
+                        $"{destination}MailToError"],
                 MailIfError =
                     GetMailBool(ConfigurationManager.AppSettings[
-                        $"{ftpDestination}MailIfError"]),
+                        $"{destination}MailIfError"]),
                 MailIfSuccess = GetMailBool(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}MailIfSuccess"]),
+                    $"{destination}MailIfSuccess"]),
                 DownloadDays =
                     GetInt(ConfigurationManager.AppSettings[
-                        $"{ftpDestination}DownloadDays"]),
+                        $"{destination}DownloadDays"]),
                 ConvertPdf =
                     GetBool(ConfigurationManager.AppSettings[
-                        $"{ftpDestination}ConvertPdf"]),
+                        $"{destination}ConvertPdf"]),
                 PdfTarget = GetPdfTarget(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}PdfVersion"]),
+                    $"{destination}PdfVersion"]),
                 PdfKeepOriginal = GetPdfBool(ConfigurationManager.AppSettings[
-                    $"{ftpDestination}PdfKeepOriginal"])
+                    $"{destination}PdfKeepOriginal"])
             };
+
+            //Backward compatibility
+            if (string.IsNullOrEmpty(config.Name))
+                config = new TransferDestination
+                {
+                    Destination = destination,
+                    TransferType = GetTransferType(destination),
+                    TransferMode = GetTransferMode(destination),
+                    AuthMode = GetFtpAuth(destination),
+                    Name = ConfigurationManager.AppSettings[
+                        $"{destination}SftpName"],
+                    BufferSize = GetInt(ConfigurationManager.AppSettings[
+                        $"{destination}SftpBufferSize"]),
+                    Server = ConfigurationManager.AppSettings[
+                        $"{destination}SftpServer"],
+                    Port = GetInt(ConfigurationManager.AppSettings[
+                        $"{destination}SftpPort"]),
+                    UsePassive = GetBool(ConfigurationManager.AppSettings[
+                        $"{destination}SftpUsePassive"]),
+                    RemotePath = ConfigurationManager.AppSettings[
+                        $"{destination}SftpPath"],
+                    SourcePath = ConfigurationManager.AppSettings[
+                        $"{destination}SftpSourcePath"],
+                    DestPath = ConfigurationManager.AppSettings[
+                        $"{destination}SftpDestPath"],
+                    DoArchive = GetBool(ConfigurationManager.AppSettings[
+                        $"{destination}SftpDoArchive"]),
+                    ArchivePath = ConfigurationManager.AppSettings[
+                        $"{destination}SftpArchivePath"],
+                    ArchiveDays = GetInt(ConfigurationManager.AppSettings[
+                        $"{destination}SftpArchiveDays"]),
+                    UserName = ConfigurationManager.AppSettings[
+                        $"{destination}SftpUserName"],
+                    Password = ConfigurationManager.AppSettings[
+                        $"{destination}SftpPassword"],
+                    CertPath = ConfigurationManager.AppSettings[
+                        $"{destination}SftpCertPath"],
+                    RetryCount = GetInt(ConfigurationManager.AppSettings[
+                        $"{destination}SftpRetryCount"]),
+                    RetryDelay = GetInt(ConfigurationManager.AppSettings[
+                        $"{destination}SftpRetryDelay"]),
+                    RetryTest = GetBool(ConfigurationManager.AppSettings[
+                        $"{destination}SftpRetryTest"]),
+                    RetryFailAll = GetBool(ConfigurationManager.AppSettings[
+                        $"{destination}SftpRetryFailAll"]),
+                    RetryFailConnect = GetBool(ConfigurationManager.AppSettings[
+                        $"{destination}SftpRetryFailConnect"]),
+                    UseProxy = GetBool(ConfigurationManager.AppSettings[
+                        $"{destination}SftpUseProxy"]),
+                    ProxyServer =
+                        ConfigurationManager.AppSettings[
+                            $"{destination}SftpProxyServer"],
+                    ProxyType = ConfigurationManager.AppSettings[
+                        $"{destination}SftpProxyType"],
+                    ProxyPort = GetInt(ConfigurationManager.AppSettings[
+                        $"{destination}SftpProxyPort"]),
+                    ProxyUser = ConfigurationManager.AppSettings[
+                        $"{destination}SftpProxyUser"],
+                    ProxyPassword =
+                        ConfigurationManager.AppSettings[
+                            $"{destination}SftpProxyPassword"],
+                    CompressType = GetCompressType(ConfigurationManager.AppSettings[
+                        $"{destination}CompressType"]),
+                    ZipPrefix = ConfigurationManager.AppSettings[
+                        $"{destination}ZipPrefix"],
+                    MailTo = ConfigurationManager.AppSettings[
+                        $"{destination}MailTo"],
+                    MailToError =
+                        ConfigurationManager.AppSettings[
+                            $"{destination}MailToError"],
+                    MailIfError =
+                        GetMailBool(ConfigurationManager.AppSettings[
+                            $"{destination}MailIfError"]),
+                    MailIfSuccess = GetMailBool(ConfigurationManager.AppSettings[
+                        $"{destination}MailIfSuccess"]),
+                    DownloadDays =
+                        GetInt(ConfigurationManager.AppSettings[
+                            $"{destination}DownloadDays"]),
+                    ConvertPdf =
+                        GetBool(ConfigurationManager.AppSettings[
+                            $"{destination}ConvertPdf"]),
+                    PdfTarget = GetPdfTarget(ConfigurationManager.AppSettings[
+                        $"{destination}PdfVersion"]),
+                    PdfKeepOriginal = GetPdfBool(ConfigurationManager.AppSettings[
+                        $"{destination}PdfKeepOriginal"])
+                };
 
             if (string.IsNullOrEmpty(config.MailToError)) config.MailToError = config.MailTo;
 
@@ -364,6 +465,12 @@ namespace Lurgle.Transfer.Classes
                 else
                     config.RetryDelay = 60000;
             }
+
+            if (config.ArchiveDays.Equals(-1) || config.ArchiveDays < ArchiveDaysMin ||
+                config.ArchiveDays > ArchiveDaysMax)
+                config.ArchiveDays = ArchiveDaysDefault;
+            //If ArchiveDays is 0, then we disable archiving
+            if (config.ArchiveDays.Equals(0)) config.DoArchive = false;
 
             return config;
         }

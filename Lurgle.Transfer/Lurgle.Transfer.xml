@@ -88,29 +88,29 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.FileTransfer.ListSftp(System.String,System.Boolean)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.ListFiles(System.String,System.Boolean)">
             <summary>
                 List remote files
             </summary>
-            <param name="filePath"></param>
+            <param name="remotePath"></param>
             <param name="listFolders"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadSftp(System.String,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadFiles(System.String,System.String,System.String)">
             <summary>
                 Download files via SFTP
             </summary>
-            <param name="sourcePath"></param>
             <param name="fileName"></param>
-            <param name="filePath"></param>
+            <param name="downloadPath"></param>
+            <param name="destPath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendSftp(System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.String,System.String)">
             <summary>
                 Send file via SFTP
             </summary>
-            <param name="filePath"></param>
             <param name="destFile"></param>
+            <param name="localPath"></param>
             <returns></returns>
         </member>
         <member name="T:Lurgle.Transfer.Classes.TransferConfig">
@@ -153,9 +153,9 @@
                 Days to retain files in archive
             </summary>
         </member>
-        <member name="P:Lurgle.Transfer.Classes.TransferConfig.SftpDestinations">
+        <member name="P:Lurgle.Transfer.Classes.TransferConfig.TransferDestinations">
             <summary>
-                List of SFTP destinations
+                Transfer destinations
             </summary>
         </member>
         <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetConfig(Lurgle.Transfer.Classes.TransferConfig)">
@@ -181,18 +181,17 @@
             <param name="sourceObject">An object that can be converted to an int</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetDestinations(System.String)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetDestinations">
             <summary>
-                Parse a comma-delimited ftpDestinations <see cref="T:System.String" /> into a list of <see cref="T:Lurgle.Transfer.Enums.Destination" />
+                Parse a comma-delimited TransferDestinations <see cref="T:System.String" /> into a list of destination configs
             </summary>
-            <param name="configValue">Setting string (comma-delimited")</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetFtpAuth(Lurgle.Transfer.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetFtpAuth(System.String)">
             <summary>
-                Return an <see cref="T:Lurgle.Transfer.Enums.TransferAuth" /> value for the specified <see cref="T:Lurgle.Transfer.Enums.Destination" />
+                Return an <see cref="T:Lurgle.Transfer.Enums.TransferAuth" /> value for the specified destination
             </summary>
-            <param name="ftpDestination">Retrieve the config for this destination</param>
+            <param name="destination">Retrieve the config for this destination</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetCompressType(System.String)">
@@ -202,18 +201,18 @@
             <param name="configValue">Setting string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetTransferType(Lurgle.Transfer.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetTransferType(System.String)">
             <summary>
                 Parse the configured transfertype <see cref="T:System.String" /> into a <see cref="T:Lurgle.Transfer.Enums.TransferType" /> value
             </summary>
-            <param name="ftpDestination">Setting string</param>
+            <param name="destination">Setting string</param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetTransferMode(Lurgle.Transfer.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetTransferMode(System.String)">
             <summary>
                 Parse the configured TransferMode <see cref="T:System.String" /> into a <see cref="T:Lurgle.Transfer.Enums.TransferMode" /> value
             </summary>
-            <param name="ftpDestination">Setting string</param>
+            <param name="destination">Setting string</param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetMailBool(System.String)">
@@ -223,16 +222,16 @@
             <param name="mailConfig"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetSftpDestination(Lurgle.Transfer.Enums.Destination)">
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.GetTransferDestination(System.String)">
             <summary>
-                Return an <see cref="T:Lurgle.Transfer.Classes.TransferDestination" /> value for the specified <see cref="T:Lurgle.Transfer.Enums.Destination" />
+                Return an <see cref="T:Lurgle.Transfer.Classes.TransferDestination" /> value for the specified destination
             </summary>
-            <param name="ftpDestination">Retrieve the config for this destination</param>
+            <param name="destination">Retrieve the config for this destination</param>
             <returns></returns>
         </member>
         <member name="T:Lurgle.Transfer.Classes.TransferDestination">
             <summary>
-                SFTP configuration class
+                Transfer configuration class
             </summary>
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferDestination.TransferType">
@@ -280,9 +279,34 @@
                 For FTP, use Passive mode
             </summary>
         </member>
-        <member name="P:Lurgle.Transfer.Classes.TransferDestination.Path">
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.RemotePath">
             <summary>
                 Remote path
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.SourcePath">
+            <summary>
+                Source path for uploads
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.DestPath">
+            <summary>
+                Destination path to move files after transfer
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.DoArchive">
+            <summary>
+                Do archival
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ArchivePath">
+            <summary>
+                Archive path
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferDestination.ArchiveDays">
+            <summary>
+                Days to retain files in archive
             </summary>
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferDestination.UserName">
@@ -449,11 +473,11 @@
                 SFTP Result
             </summary>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.TransferResult.#ctor(Lurgle.Transfer.Enums.Destination,System.Boolean)">
+        <member name="M:Lurgle.Transfer.Classes.TransferResult.#ctor(System.String,System.Boolean)">
             <summary>
                 SFTP Result
             </summary>
-            <param name="ftpDestination"></param>
+            <param name="destination"></param>
             <param name="isCert"></param>
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferResult.Status">
@@ -589,41 +613,6 @@
         <member name="F:Lurgle.Transfer.Enums.CompressType.ZipPerFile">
             <summary>
                 Zip file for each file
-            </summary>
-        </member>
-        <member name="T:Lurgle.Transfer.Enums.Destination">
-            <summary>
-                Enum containing all configurable SFTP destinations
-            </summary>
-        </member>
-        <member name="F:Lurgle.Transfer.Enums.Destination.First">
-            <summary>
-                First destination
-            </summary>
-        </member>
-        <member name="F:Lurgle.Transfer.Enums.Destination.Second">
-            <summary>
-                Second destination
-            </summary>
-        </member>
-        <member name="F:Lurgle.Transfer.Enums.Destination.Third">
-            <summary>
-                Third destination
-            </summary>
-        </member>
-        <member name="F:Lurgle.Transfer.Enums.Destination.Fourth">
-            <summary>
-                Fourth destination
-            </summary>
-        </member>
-        <member name="F:Lurgle.Transfer.Enums.Destination.Fifth">
-            <summary>
-                Fifth destination
-            </summary>
-        </member>
-        <member name="F:Lurgle.Transfer.Enums.Destination.Unknown">
-            <summary>
-                Destination unknown/not specified
             </summary>
         </member>
         <member name="T:Lurgle.Transfer.Enums.EmailTemplate">
@@ -992,20 +981,13 @@
         </member>
         <member name="P:Lurgle.Transfer.Transfers.Config">
             <summary>
-            Current Lurgle.Transfer configuration
+                Current Lurgle.Transfer configuration
             </summary>
         </member>
         <member name="M:Lurgle.Transfer.Transfers.SetConfig(Lurgle.Transfer.Classes.TransferConfig)">
             <summary>
                 Set the logging config. This will only set/update the config if there is no LogWriter currently set.
             </summary>
-        </member>
-        <member name="M:Lurgle.Transfer.Transfers.GetTransferConfig(Lurgle.Transfer.Enums.Destination)">
-            <summary>
-            Retrieve a transfer destination
-            </summary>
-            <param name="destination"></param>
-            <returns></returns>
         </member>
     </members>
 </doc>

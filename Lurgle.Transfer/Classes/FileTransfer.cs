@@ -48,22 +48,27 @@ namespace Lurgle.Transfer.Classes
                         authMethods.Add(new PrivateKeyAuthenticationMethod(TransferConfig.UserName, keyFile));
                     }
 
-                    if (TransferConfig.AuthMode.Equals(TransferAuth.Password) || TransferConfig.AuthMode.Equals(TransferAuth.Both))
-                        authMethods.Add(new PasswordAuthenticationMethod(TransferConfig.UserName, TransferConfig.Password));
+                    if (TransferConfig.AuthMode.Equals(TransferAuth.Password) ||
+                        TransferConfig.AuthMode.Equals(TransferAuth.Both))
+                        authMethods.Add(new PasswordAuthenticationMethod(TransferConfig.UserName,
+                            TransferConfig.Password));
 
                     ConnectionInfo sftpConnection;
 
                     if (!TransferConfig.UseProxy ||
                         TransferConfig.UseProxy && string.IsNullOrEmpty(TransferConfig.ProxyServer))
                     {
-                        sftpConnection = new ConnectionInfo(TransferConfig.Server, TransferConfig.Port, TransferConfig.UserName,
+                        sftpConnection = new ConnectionInfo(TransferConfig.Server, TransferConfig.Port,
+                            TransferConfig.UserName,
                             authMethods.ToArray());
                     }
                     else
                     {
-                        if (!Enum.TryParse(TransferConfig.ProxyType, out ProxyTypes proxyType)) proxyType = ProxyTypes.Http;
+                        if (!Enum.TryParse(TransferConfig.ProxyType, out ProxyTypes proxyType))
+                            proxyType = ProxyTypes.Http;
 
-                        sftpConnection = new ConnectionInfo(TransferConfig.Server, TransferConfig.Port, TransferConfig.UserName,
+                        sftpConnection = new ConnectionInfo(TransferConfig.Server, TransferConfig.Port,
+                            TransferConfig.UserName,
                             proxyType, TransferConfig.ProxyServer, TransferConfig.ProxyPort, TransferConfig.ProxyUser,
                             TransferConfig.ProxyPassword, authMethods.ToArray());
                     }
@@ -85,7 +90,8 @@ namespace Lurgle.Transfer.Classes
 
                         if (!string.IsNullOrEmpty(TransferConfig.ProxyUser) &&
                             !string.IsNullOrEmpty(TransferConfig.ProxyPassword))
-                            proxy.Credentials = new NetworkCredential(TransferConfig.ProxyUser, TransferConfig.ProxyPassword);
+                            proxy.Credentials =
+                                new NetworkCredential(TransferConfig.ProxyUser, TransferConfig.ProxyPassword);
 
                         FtpClient = new FtpClientHttp11Proxy(proxy);
                     }
@@ -97,7 +103,8 @@ namespace Lurgle.Transfer.Classes
                     FtpClient.Host = TransferConfig.Server;
                     FtpClient.Port = TransferConfig.Port;
 
-                    if (TransferConfig.AuthMode.Equals(TransferAuth.Password) || TransferConfig.AuthMode.Equals(TransferAuth.Both))
+                    if (TransferConfig.AuthMode.Equals(TransferAuth.Password) ||
+                        TransferConfig.AuthMode.Equals(TransferAuth.Both))
                         FtpClient.Credentials = new NetworkCredential(TransferConfig.UserName, TransferConfig.Password);
 
                     FtpClient.DataConnectionType =
@@ -147,7 +154,7 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Destination
         /// </summary>
-        public Destination Destination { get; }
+        public string Destination { get; }
 
 
         /// <summary>
@@ -214,11 +221,17 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     List remote files
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="remotePath"></param>
         /// <param name="listFolders"></param>
         /// <returns></returns>
-        public TransferResult ListSftp(string filePath, bool listFolders = true)
+        public TransferResult ListFiles(string remotePath = null, bool listFolders = true)
         {
+            var filePath = remotePath;
+            if (string.IsNullOrEmpty(remotePath))
+                filePath = !string.IsNullOrEmpty(TransferConfig.DestPath)
+                    ? TransferConfig.DestPath
+                    : Transfers.Config.DestPath;
+
             var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
             var listFiles = new List<TransferInfo>();
             try
@@ -256,32 +269,43 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Download files via SFTP
         /// </summary>
-        /// <param name="sourcePath"></param>
         /// <param name="fileName"></param>
-        /// <param name="filePath"></param>
+        /// <param name="downloadPath"></param>
+        /// <param name="destPath"></param>
         /// <returns></returns>
-        public TransferResult DownloadSftp(string sourcePath, string fileName, string filePath)
+        public TransferResult DownloadFiles(string fileName, string downloadPath = null, string destPath = null)
         {
+            var remotePath = downloadPath;
+            if (string.IsNullOrEmpty(remotePath))
+                remotePath = string.IsNullOrEmpty(TransferConfig.DestPath)
+                    ? TransferConfig.DestPath
+                    : Transfers.Config.DestPath;
+
+            var filePath = destPath;
+            if (string.IsNullOrEmpty(destPath))
+                filePath = !string.IsNullOrEmpty(TransferConfig.DestPath)
+                    ? TransferConfig.DestPath
+                    : Transfers.Config.DestPath;
             var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
 
             try
             {
                 if (!SftpClient.IsConnected) SftpClient.Connect();
 
-                var remotePath = Url.Combine(sourcePath, fileName);
-                var destPath = Path.Combine(filePath, fileName);
-                var transferFile = new FileStream(destPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite,
+                var remoteFile = Url.Combine(remotePath, fileName);
+                var destFile = Path.Combine(filePath, fileName);
+                var transferFile = new FileStream(destFile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite,
                     TransferConfig.BufferSize);
 
                 switch (TransferConfig.TransferMode)
                 {
                     case TransferMode.Sftp:
-                        var fileInfo = SftpClient.GetAttributes(remotePath);
-                        SftpClient.DownloadFile(remotePath, transferFile);
+                        var fileInfo = SftpClient.GetAttributes(remoteFile);
+                        SftpClient.DownloadFile(remoteFile, transferFile);
                         transferResult.FileSize = fileInfo.Size;
                         break;
                     case TransferMode.Ftp:
-                        var fileSize = FtpClient.GetFileSize(remotePath);
+                        var fileSize = FtpClient.GetFileSize(remoteFile);
                         FtpClient.Download(transferFile, remotePath);
                         transferResult.FileSize = fileSize;
                         break;
@@ -303,18 +327,23 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Send file via SFTP
         /// </summary>
-        /// <param name="filePath"></param>
         /// <param name="destFile"></param>
+        /// <param name="localPath"></param>
         /// <returns></returns>
-        public TransferResult SendSftp(string filePath, string destFile)
+        public TransferResult SendFiles(string destFile, string localPath = null)
         {
+            var filePath = localPath;
+            if (string.IsNullOrEmpty(filePath))
+                filePath = !string.IsNullOrEmpty(TransferConfig.SourcePath)
+                    ? TransferConfig.SourcePath
+                    : Transfers.Config.SourcePath;
             var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
 
             try
             {
                 if (!SftpClient.IsConnected) SftpClient.Connect();
 
-                var sftpPath = Url.Combine(TransferConfig.Path, Path.GetFileName(destFile));
+                var sftpPath = Url.Combine(TransferConfig.RemotePath, Path.GetFileName(destFile));
                 var transferFile = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read,
                     TransferConfig.BufferSize);
 

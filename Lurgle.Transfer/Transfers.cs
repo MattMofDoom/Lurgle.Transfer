@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-using Lurgle.Transfer.Classes;
-using Lurgle.Transfer.Enums;
+﻿using Lurgle.Transfer.Classes;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -17,9 +14,9 @@ namespace Lurgle.Transfer
     public static class Transfers
     {
         /// <summary>
-        /// Current Lurgle.Transfer configuration
+        ///     Current Lurgle.Transfer configuration
         /// </summary>
-        public static TransferConfig Config { get; set; }
+        public static TransferConfig Config { get; private set; }
 
         /// <summary>
         ///     Set the logging config. This will only set/update the config if there is no LogWriter currently set.
@@ -27,16 +24,6 @@ namespace Lurgle.Transfer
         public static void SetConfig(TransferConfig config = null)
         {
             Config = TransferConfig.GetConfig(config);
-        }
-
-        /// <summary>
-        /// Retrieve a transfer destination
-        /// </summary>
-        /// <param name="destination"></param>
-        /// <returns></returns>
-        public static TransferDestination GetTransferConfig(Destination destination)
-        {
-            return TransferConfig.GetSftpDestination(destination);
         }
     }
 }
