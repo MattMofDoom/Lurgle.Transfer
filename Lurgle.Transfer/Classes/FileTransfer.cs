@@ -228,9 +228,9 @@ namespace Lurgle.Transfer.Classes
         {
             var filePath = remotePath;
             if (string.IsNullOrEmpty(remotePath))
-                filePath = !string.IsNullOrEmpty(TransferConfig.DestPath)
-                    ? TransferConfig.DestPath
-                    : Transfers.Config.DestPath;
+                filePath = !string.IsNullOrEmpty(TransferConfig.RemotePath)
+                    ? TransferConfig.RemotePath
+                    : "";
 
             var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
             var listFiles = new List<TransferInfo>();
@@ -291,9 +291,9 @@ namespace Lurgle.Transfer.Classes
 
             var filePath = destPath;
             if (string.IsNullOrEmpty(destPath))
-                filePath = !string.IsNullOrEmpty(TransferConfig.DestPath)
-                    ? TransferConfig.DestPath
-                    : Transfers.Config.DestPath;
+                filePath = !string.IsNullOrEmpty(TransferConfig.RemotePath)
+                    ? TransferConfig.RemotePath
+                    : "";
             var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
 
             try
