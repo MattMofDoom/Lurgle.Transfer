@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Lurgle.Transfer.Enums;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local
@@ -16,15 +18,15 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     SFTP Result
         /// </summary>
-        /// <param name="ftpDestination"></param>
+        /// <param name="destination"></param>
         /// <param name="isCert"></param>
-        public TransferResult(Destination ftpDestination, bool isCert)
+        public TransferResult(string destination, bool isCert)
         {
-            Destination = Destination.Unknown;
+            Destination = destination;
             Status = TransferStatus.Unknown;
             FileSize = 0;
             UseCert = isCert;
-            Destination = ftpDestination;
+            Destination = destination;
             FileList = new List<TransferInfo>();
             ErrorDetails = null;
         }
@@ -42,12 +44,12 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Use certificate authentication
         /// </summary>
-        private bool UseCert { get; }
+        public bool UseCert { get; }
 
         /// <summary>
         ///     Destination
         /// </summary>
-        private Destination Destination { get; }
+        public string Destination { get; }
 
         /// <summary>
         ///     File list

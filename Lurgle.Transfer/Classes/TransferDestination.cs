@@ -8,7 +8,7 @@ using Lurgle.Transfer.Enums;
 namespace Lurgle.Transfer.Classes
 {
     /// <summary>
-    ///     SFTP configuration class
+    ///     Transfer configuration class
     /// </summary>
     public class TransferDestination
     {
@@ -25,7 +25,7 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Destination
         /// </summary>
-        public Destination Destination { get; set; }
+        public string Destination { get; set; }
 
         /// <summary>
         ///     Authentication mode
@@ -60,7 +60,32 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Remote path
         /// </summary>
-        public string Path { get; set; }
+        public string RemotePath { get; set; }
+
+        /// <summary>
+        ///     Source path for uploads
+        /// </summary>
+        public string SourcePath { get; set; }
+
+        /// <summary>
+        ///     Destination path to move files after transfer
+        /// </summary>
+        public string DestPath { get; set; }
+
+        /// <summary>
+        ///     Do archival
+        /// </summary>
+        public bool DoArchive { get; set; }
+
+        /// <summary>
+        ///     Archive path
+        /// </summary>
+        public string ArchivePath { get; set; }
+
+        /// <summary>
+        ///     Days to retain files in archive
+        /// </summary>
+        public int ArchiveDays { get; set; }
 
         /// <summary>
         ///     Username
