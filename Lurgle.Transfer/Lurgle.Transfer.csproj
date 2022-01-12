@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Transfer</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle FTP SFTP SSH SSH.NET FluentFTP File Transfer compression compressed uncompressed gzip zip</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.1.7</Version>
     <PackageReleaseNotes>
       * Add XML documentation
