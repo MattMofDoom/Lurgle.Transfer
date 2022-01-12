@@ -322,7 +322,7 @@ namespace Lurgle.Transfer.Classes
                         break;
                     case TransferMode.Ftp:
                         var fileSize = FtpClient.GetFileSize(remoteFile);
-                        FtpClient.Download(transferFile, remotePath);
+                        FtpClient.Download(transferFile, remoteFile);
                         transferResult.FileSize = fileSize;
                         break;
                 }
