@@ -25,5 +25,13 @@ namespace Lurgle.Transfer
         {
             Config = TransferConfig.GetConfig(config);
         }
+
+        /// <summary>
+        ///     Initialisation transfer config
+        /// </summary>
+        public static void Init()
+        {
+            if (Config == null) SetConfig();
+        }
     }
 }
