@@ -17,12 +17,87 @@ namespace Lurgle.Transfer.Classes
     /// </summary>
     public class TransferConfig
     {
-        private const int ArchiveDaysDefault = 30;
-        private const int ArchiveDaysMin = 0;
-        private const int ArchiveDaysMax = 365;
-        private const int DefaultSftpPort = 22;
-        private const int DefaultProxyPort = 80;
-        private const int DefaultFtpBufferSize = 262144;
+        /// <summary>
+        ///     Default value for ArchiveDays
+        /// </summary>
+        public const int ArchiveDaysDefault = 30;
+
+        /// <summary>
+        ///     Minimum value for ArchiveDays
+        /// </summary>
+        public const int ArchiveDaysMin = 0;
+
+        /// <summary>
+        ///     Maximum value for Archive Days
+        /// </summary>
+        public const int ArchiveDaysMax = 365;
+
+        /// <summary>
+        ///     Default port
+        /// </summary>
+        public const int DefaultSftpPort = 22;
+
+        /// <summary>
+        ///     Default proxy port
+        /// </summary>
+        public const int DefaultProxyPort = 80;
+
+        /// <summary>
+        ///     Default buffer size
+        /// </summary>
+        public const int DefaultFtpBufferSize = 262144;
+
+        /// <summary>
+        ///     Constructor that permits passing a config and optional overrides of any property
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="appName"></param>
+        /// <param name="appVersion"></param>
+        /// <param name="sourcePath"></param>
+        /// <param name="destPath"></param>
+        /// <param name="doArchive"></param>
+        /// <param name="archivePath"></param>
+        /// <param name="archiveDays"></param>
+        /// <param name="transferDestinations"></param>
+        public TransferConfig(TransferConfig config = null, string appName = null, string appVersion = null,
+            string sourcePath = null, string destPath = null, bool? doArchive = null, string archivePath = null,
+            int? archiveDays = null, Dictionary<string, TransferDestination> transferDestinations = null)
+        {
+            if (config != null)
+            {
+                AppName = config.AppName;
+                AppVersion = config.AppVersion;
+                SourcePath = config.SourcePath;
+                DestPath = config.DestPath;
+                DoArchive = config.DoArchive;
+                ArchivePath = config.ArchivePath;
+                ArchiveDays = config.ArchiveDays;
+                TransferDestinations = config.TransferDestinations;
+            }
+
+            if (!string.IsNullOrEmpty(AppName))
+                AppName = appName;
+            if (!string.IsNullOrEmpty(AppVersion))
+                AppVersion = appVersion;
+            if (!string.IsNullOrEmpty(sourcePath))
+                SourcePath = sourcePath;
+            if (!string.IsNullOrEmpty(destPath))
+                DestPath = destPath;
+            if (doArchive != null)
+                DoArchive = (bool) doArchive;
+            if (!string.IsNullOrEmpty(archivePath))
+                ArchivePath = archivePath;
+            if (archiveDays != null)
+                ArchiveDays = (int) archiveDays;
+            if (transferDestinations != null)
+                TransferDestinations = transferDestinations;
+
+            if (archiveDays.Equals(-1) || archiveDays < ArchiveDaysMin ||
+                archiveDays > ArchiveDaysMax)
+                archiveDays = ArchiveDaysDefault;
+            //If ArchiveDays is 0, then we disable archiving
+            if (archiveDays.Equals(0)) DoArchive = false;
+        }
 
         /// <summary>
         ///     App name
@@ -37,7 +112,7 @@ namespace Lurgle.Transfer.Classes
         /// <summary>
         ///     Source path
         /// </summary>
-        public string SourcePath { get; set; }
+        public string SourcePath { get; private set; }
 
         /// <summary>
         ///     Destination path

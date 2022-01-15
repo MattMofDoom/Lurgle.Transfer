@@ -7,11 +7,12 @@ using Lurgle.Transfer.Enums;
 
 namespace LurgleTest
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Transfers.SetConfig();
+            Transfers.Init();
+
             foreach (var destination in Transfers.Config.TransferDestinations)
             {
                 var transfer = new FileTransfer(destination.Value);
@@ -20,7 +21,8 @@ namespace LurgleTest
 
                 do
                 {
-                    Console.WriteLine("Attempting connect to {0} ({1})...", transfer.TransferConfig.Name, transfer.Destination);
+                    Console.WriteLine("Attempting connect to {0} ({1})...", transfer.TransferConfig.Name,
+                        transfer.Destination);
                     retries++;
                     if (retries > 1)
                     {
@@ -29,13 +31,14 @@ namespace LurgleTest
                     }
 
                     transferResult = transfer.Connect();
-                        Console.WriteLine("Connect: {0} {1}", transferResult.Status, transferResult.ErrorDetails == null ? string.Empty : transferResult.ErrorDetails.ToString());
-
+                    Console.WriteLine("Connect: {0} {1}", transferResult.Status,
+                        transferResult.ErrorDetails == null ? string.Empty : transferResult.ErrorDetails.ToString());
                 } while (transferResult.Status != TransferStatus.Success &&
                          retries < transfer.TransferConfig.RetryCount);
 
                 if (transferResult.Status != TransferStatus.Success) continue;
-                Console.WriteLine("Attempting {0} to {1} ({2})", transfer.TransferConfig.TransferType, transfer.TransferConfig.Name, transfer.Destination);
+                Console.WriteLine("Attempting {0} to {1} ({2})", transfer.TransferConfig.TransferType,
+                    transfer.TransferConfig.Name, transfer.Destination);
                 switch (transfer.TransferConfig.TransferType)
                 {
                     case TransferType.Upload:
@@ -47,15 +50,18 @@ namespace LurgleTest
                                 retries++;
                                 if (retries > 1)
                                 {
-                                    Console.WriteLine("Await {0} seconds for retry ...", transfer.TransferConfig.RetryDelay / 1000);
+                                    Console.WriteLine("Await {0} seconds for retry ...",
+                                        transfer.TransferConfig.RetryDelay / 1000);
                                     Thread.Sleep(transfer.TransferConfig.RetryDelay);
                                 }
 
                                 transferResult = transfer.SendFiles(Path.GetFileName(file.FileName), file.FileName);
 
                                 Console.WriteLine("Send Result: File {0}, Result {1} {2}", file.FileName,
-                                    transferResult.Status, transferResult.ErrorDetails == null ? string.Empty : transferResult.ErrorDetails.ToString());
-
+                                    transferResult.Status,
+                                    transferResult.ErrorDetails == null
+                                        ? string.Empty
+                                        : transferResult.ErrorDetails.ToString());
                             } while (transferResult.Status != TransferStatus.Success &&
                                      retries < transfer.TransferConfig.RetryCount);
                         }
@@ -68,12 +74,12 @@ namespace LurgleTest
                             retries++;
                             if (retries > 1)
                             {
-                                Console.WriteLine("Await {0} seconds for retry ...", transfer.TransferConfig.RetryDelay / 1000);
+                                Console.WriteLine("Await {0} seconds for retry ...",
+                                    transfer.TransferConfig.RetryDelay / 1000);
                                 Thread.Sleep(transfer.TransferConfig.RetryDelay);
                             }
 
                             transferResult = transfer.ListFiles();
-
                         } while (transferResult.Status != TransferStatus.Success &&
                                  retries < transfer.TransferConfig.RetryCount);
 
@@ -98,16 +104,20 @@ namespace LurgleTest
                                     retries++;
                                     if (retries > 1)
                                     {
-                                        Console.WriteLine("Await {0} seconds for retry ...", transfer.TransferConfig.RetryDelay / 1000);
+                                        Console.WriteLine("Await {0} seconds for retry ...",
+                                            transfer.TransferConfig.RetryDelay / 1000);
                                         Thread.Sleep(transfer.TransferConfig.RetryDelay);
                                     }
 
                                     transferResult =
-                                        transfer.DownloadFiles(file.FileName, transfer.TransferConfig.RemotePath, transfer.TransferConfig.DestPath);
+                                        transfer.DownloadFiles(file.FileName, transfer.TransferConfig.RemotePath,
+                                            transfer.TransferConfig.DestPath);
 
                                     Console.WriteLine("Download Result: File {0}, Result {1} {2}", file.FileName,
-                                        transferResult.Status, transferResult.ErrorDetails == null ? string.Empty : transferResult.ErrorDetails.ToString());
-
+                                        transferResult.Status,
+                                        transferResult.ErrorDetails == null
+                                            ? string.Empty
+                                            : transferResult.ErrorDetails.ToString());
                                 } while (transferResult.Status != TransferStatus.Success &&
                                          retries < transfer.TransferConfig.RetryCount);
                             }
@@ -116,9 +126,11 @@ namespace LurgleTest
                         break;
                 }
 
-                Console.WriteLine("Disconnecting from {0} ({1})...", transfer.TransferConfig.Name, transfer.Destination);
+                Console.WriteLine("Disconnecting from {0} ({1})...", transfer.TransferConfig.Name,
+                    transfer.Destination);
                 transfer.Disconnect();
-                Console.WriteLine("Disconnect: {0} {1}", transferResult.Status, transferResult.ErrorDetails == null ? string.Empty : transferResult.ErrorDetails.ToString());
+                Console.WriteLine("Disconnect: {0} {1}", transferResult.Status,
+                    transferResult.ErrorDetails == null ? string.Empty : transferResult.ErrorDetails.ToString());
             }
         }
     }

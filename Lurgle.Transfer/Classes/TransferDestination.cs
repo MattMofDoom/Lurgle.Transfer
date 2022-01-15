@@ -13,6 +13,213 @@ namespace Lurgle.Transfer.Classes
     public class TransferDestination
     {
         /// <summary>
+        ///     Constructor that permits passing a TransferDestination config and optional overrides of any property
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="name"></param>
+        /// <param name="transferType"></param>
+        /// <param name="transferMode"></param>
+        /// <param name="destination"></param>
+        /// <param name="authMode"></param>
+        /// <param name="certPath"></param>
+        /// <param name="bufferSize"></param>
+        /// <param name="server"></param>
+        /// <param name="port"></param>
+        /// <param name="usePassive"></param>
+        /// <param name="remotePath"></param>
+        /// <param name="sourcePath"></param>
+        /// <param name="destPath"></param>
+        /// <param name="doArchive"></param>
+        /// <param name="archivePath"></param>
+        /// <param name="archiveDays"></param>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="retryCount"></param>
+        /// <param name="retryDelay"></param>
+        /// <param name="retryTest"></param>
+        /// <param name="retryFailAll"></param>
+        /// <param name="retryFailConnect"></param>
+        /// <param name="useProxy"></param>
+        /// <param name="proxyType"></param>
+        /// <param name="proxyServer"></param>
+        /// <param name="proxyPort"></param>
+        /// <param name="proxyUser"></param>
+        /// <param name="proxyPassword"></param>
+        /// <param name="compressType"></param>
+        /// <param name="zipPrefix"></param>
+        /// <param name="mailTo"></param>
+        /// <param name="mailToError"></param>
+        /// <param name="mailIfError"></param>
+        /// <param name="mailIfSuccess"></param>
+        /// <param name="downloadDays"></param>
+        /// <param name="convertPdf"></param>
+        /// <param name="pdfTarget"></param>
+        /// <param name="pdfKeepOriginal"></param>
+        public TransferDestination(TransferDestination config = null, string name = null,
+            TransferType? transferType = null,
+            TransferMode? transferMode = null, string destination = null, TransferAuth? authMode = null,
+            string certPath = null, int? bufferSize = null, string server = null, int? port = null,
+            bool? usePassive = null,
+            string remotePath = null, string sourcePath = null, string destPath = null, bool? doArchive = null,
+            string archivePath = null, int? archiveDays = null, string userName = null, string password = null,
+            int? retryCount = null, int? retryDelay = null, bool? retryTest = null, bool? retryFailAll = null,
+            bool? retryFailConnect = null, bool? useProxy = null, string proxyType = null, string proxyServer = null,
+            int? proxyPort = null, string proxyUser = null, string proxyPassword = null,
+            CompressType? compressType = null, string zipPrefix = null, string mailTo = null, string mailToError = null,
+            bool? mailIfError = null, bool? mailIfSuccess = null, int? downloadDays = null, bool? convertPdf = null,
+            PdfTarget? pdfTarget = null, bool? pdfKeepOriginal = null)
+        {
+            if (config != null)
+            {
+                Name = config.Name;
+                TransferType = config.TransferType;
+                TransferMode = config.TransferMode;
+                Destination = config.Destination;
+                AuthMode = config.AuthMode;
+                CertPath = config.CertPath;
+                BufferSize = config.BufferSize;
+                Server = config.Server;
+                Port = config.Port;
+                UsePassive = config.UsePassive;
+                RemotePath = config.RemotePath;
+                SourcePath = config.SourcePath;
+                DestPath = config.DestPath;
+                DoArchive = config.DoArchive;
+                ArchivePath = config.ArchivePath;
+                ArchiveDays = config.ArchiveDays;
+                UserName = config.UserName;
+                Password = config.Password;
+                RetryCount = config.RetryCount;
+                RetryDelay = config.RetryDelay;
+                RetryTest = config.RetryTest;
+                RetryFailAll = config.RetryFailAll;
+                RetryFailConnect = config.RetryFailConnect;
+                UseProxy = config.UseProxy;
+                ProxyType = config.ProxyType;
+                ProxyServer = config.ProxyServer;
+                ProxyPort = config.ProxyPort;
+                ProxyUser = config.ProxyUser;
+                ProxyPassword = config.ProxyPassword;
+                CompressType = config.CompressType;
+                ZipPrefix = config.ZipPrefix;
+                MailTo = config.MailTo;
+                MailToError = config.MailToError;
+                MailIfError = config.MailIfError;
+                MailIfSuccess = config.MailIfSuccess;
+                DownloadDays = config.DownloadDays;
+                ConvertPdf = config.ConvertPdf;
+                PdfTarget = config.PdfTarget;
+                PdfKeepOriginal = config.PdfKeepOriginal;
+            }
+
+            if (!string.IsNullOrEmpty(name))
+                Name = config.Name;
+            if (transferType != null)
+                TransferType = (TransferType) transferType;
+            if (transferMode != null)
+                TransferMode = (TransferMode) transferMode;
+            if (!string.IsNullOrEmpty(destination))
+                Destination = destination;
+            if (authMode != null)
+                AuthMode = (TransferAuth) authMode;
+            if (!string.IsNullOrEmpty(certPath))
+                CertPath = certPath;
+            if (bufferSize != null)
+                BufferSize = (int) bufferSize;
+            if (!string.IsNullOrEmpty(server))
+                Server = server;
+            if (port != null)
+                Port = (int) port;
+            if (usePassive != null)
+                UsePassive = (bool) usePassive;
+            if (!string.IsNullOrEmpty(remotePath))
+                RemotePath = remotePath;
+            if (!string.IsNullOrEmpty(sourcePath))
+                SourcePath = sourcePath;
+            if (!string.IsNullOrEmpty(destPath))
+                DestPath = destPath;
+            if (doArchive != null)
+                DoArchive = (bool) doArchive;
+            if (!string.IsNullOrEmpty(archivePath))
+                ArchivePath = archivePath;
+            if (archiveDays != null)
+                ArchiveDays = (int) archiveDays;
+            if (!string.IsNullOrEmpty(userName))
+                UserName = userName;
+            if (!string.IsNullOrEmpty(password))
+                Password = password;
+            if (retryCount != null)
+                RetryCount = (int) retryCount;
+            if (retryDelay != null)
+                RetryDelay = (int) retryDelay;
+            if (retryTest != null)
+                RetryTest = (bool) retryTest;
+            if (retryFailAll != null)
+                RetryFailAll = (bool) retryFailAll;
+            if (retryFailConnect != null)
+                RetryFailConnect = (bool) retryFailConnect;
+            if (useProxy != null)
+                UseProxy = (bool) useProxy;
+            if (!string.IsNullOrEmpty(ProxyType))
+                ProxyType = proxyType;
+            if (!string.IsNullOrEmpty(proxyServer))
+                ProxyServer = proxyServer;
+            if (proxyPort != null)
+                ProxyPort = (int) proxyPort;
+            if (!string.IsNullOrEmpty(proxyUser))
+                ProxyUser = proxyUser;
+            if (!string.IsNullOrEmpty(proxyPassword))
+                ProxyPassword = proxyPassword;
+            if (compressType != null)
+                CompressType = (CompressType) compressType;
+            if (!string.IsNullOrEmpty(zipPrefix))
+                ZipPrefix = zipPrefix;
+            if (!string.IsNullOrEmpty(mailTo))
+                MailTo = mailTo;
+            if (!string.IsNullOrEmpty(mailToError))
+                MailToError = mailToError;
+            if (mailIfError != null)
+                MailIfError = (bool) mailIfError;
+            if (mailIfSuccess != null)
+                MailIfSuccess = (bool) mailIfSuccess;
+            if (downloadDays != null)
+                DownloadDays = (int) downloadDays;
+            if (convertPdf != null)
+                ConvertPdf = (bool) convertPdf;
+            if (pdfTarget != null)
+                PdfTarget = (PdfTarget) pdfTarget;
+            if (pdfKeepOriginal != null)
+                PdfKeepOriginal = (bool) pdfKeepOriginal;
+
+            if (Port.Equals(-1)) Port = TransferConfig.DefaultSftpPort;
+
+            if (ProxyPort.Equals(-1)) ProxyPort = TransferConfig.DefaultProxyPort;
+
+            if (BufferSize < 32768) BufferSize = TransferConfig.DefaultFtpBufferSize;
+
+            if (RetryCount < 0)
+                RetryCount = 0;
+
+            if (RetryDelay < 0)
+            {
+                RetryDelay = 0;
+            }
+            else
+            {
+                if (RetryDelay < 600)
+                    RetryDelay *= 1000;
+                else
+                    RetryDelay = 60000;
+            }
+
+            if (ArchiveDays.Equals(-1) || ArchiveDays < TransferConfig.ArchiveDaysMin ||
+                ArchiveDays > TransferConfig.ArchiveDaysMax)
+                ArchiveDays = TransferConfig.ArchiveDaysDefault;
+            //If ArchiveDays is 0, then we disable archiving
+            if (ArchiveDays.Equals(0)) DoArchive = false;
+        }
+
+        /// <summary>
         ///     Type of transfer
         /// </summary>
         public TransferType TransferType { get; set; }

@@ -118,6 +118,50 @@
                 Configuration
             </summary>
         </member>
+        <member name="F:Lurgle.Transfer.Classes.TransferConfig.ArchiveDaysDefault">
+            <summary>
+                Default value for ArchiveDays
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Classes.TransferConfig.ArchiveDaysMin">
+            <summary>
+                Minimum value for ArchiveDays
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Classes.TransferConfig.ArchiveDaysMax">
+            <summary>
+                Maximum value for Archive Days
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Classes.TransferConfig.DefaultSftpPort">
+            <summary>
+                Default port
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Classes.TransferConfig.DefaultProxyPort">
+            <summary>
+                Default proxy port
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Classes.TransferConfig.DefaultFtpBufferSize">
+            <summary>
+                Default buffer size
+            </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.TransferConfig.#ctor(Lurgle.Transfer.Classes.TransferConfig,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.Collections.Generic.Dictionary{System.String,Lurgle.Transfer.Classes.TransferDestination})">
+            <summary>
+                Constructor that permits passing a config and optional overrides of any property
+            </summary>
+            <param name="config"></param>
+            <param name="appName"></param>
+            <param name="appVersion"></param>
+            <param name="sourcePath"></param>
+            <param name="destPath"></param>
+            <param name="doArchive"></param>
+            <param name="archivePath"></param>
+            <param name="archiveDays"></param>
+            <param name="transferDestinations"></param>
+        </member>
         <member name="P:Lurgle.Transfer.Classes.TransferConfig.AppName">
             <summary>
                 App name
@@ -233,6 +277,51 @@
             <summary>
                 Transfer configuration class
             </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.TransferDestination.#ctor(Lurgle.Transfer.Classes.TransferDestination,System.String,System.Nullable{Lurgle.Transfer.Enums.TransferType},System.Nullable{Lurgle.Transfer.Enums.TransferMode},System.String,System.Nullable{Lurgle.Transfer.Enums.TransferAuth},System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Int32},System.String,System.String,System.Nullable{Lurgle.Transfer.Enums.CompressType},System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{Lurgle.Transfer.Enums.PdfTarget},System.Nullable{System.Boolean})">
+            <summary>
+                Constructor that permits passing a TransferDestination config and optional overrides of any property
+            </summary>
+            <param name="config"></param>
+            <param name="name"></param>
+            <param name="transferType"></param>
+            <param name="transferMode"></param>
+            <param name="destination"></param>
+            <param name="authMode"></param>
+            <param name="certPath"></param>
+            <param name="bufferSize"></param>
+            <param name="server"></param>
+            <param name="port"></param>
+            <param name="usePassive"></param>
+            <param name="remotePath"></param>
+            <param name="sourcePath"></param>
+            <param name="destPath"></param>
+            <param name="doArchive"></param>
+            <param name="archivePath"></param>
+            <param name="archiveDays"></param>
+            <param name="userName"></param>
+            <param name="password"></param>
+            <param name="retryCount"></param>
+            <param name="retryDelay"></param>
+            <param name="retryTest"></param>
+            <param name="retryFailAll"></param>
+            <param name="retryFailConnect"></param>
+            <param name="useProxy"></param>
+            <param name="proxyType"></param>
+            <param name="proxyServer"></param>
+            <param name="proxyPort"></param>
+            <param name="proxyUser"></param>
+            <param name="proxyPassword"></param>
+            <param name="compressType"></param>
+            <param name="zipPrefix"></param>
+            <param name="mailTo"></param>
+            <param name="mailToError"></param>
+            <param name="mailIfError"></param>
+            <param name="mailIfSuccess"></param>
+            <param name="downloadDays"></param>
+            <param name="convertPdf"></param>
+            <param name="pdfTarget"></param>
+            <param name="pdfKeepOriginal"></param>
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferDestination.TransferType">
             <summary>
@@ -987,6 +1076,11 @@
         <member name="M:Lurgle.Transfer.Transfers.SetConfig(Lurgle.Transfer.Classes.TransferConfig)">
             <summary>
                 Set the logging config. This will only set/update the config if there is no LogWriter currently set.
+            </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Transfers.Init">
+            <summary>
+                Initialisation transfer config
             </summary>
         </member>
     </members>
