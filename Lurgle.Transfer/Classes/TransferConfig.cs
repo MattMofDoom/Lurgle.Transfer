@@ -327,26 +327,13 @@ namespace Lurgle.Transfer.Classes
             return string.IsNullOrEmpty(mailConfig) || GetBool(mailConfig);
         }
 
-        private static PdfTarget GetPdfTarget(string pdfTarget)
-        {
-            return Enum.TryParse(pdfTarget, true, out PdfTarget pdfVersion) ? pdfVersion : PdfTarget.Pdf1_3;
-        }
-
-        private static bool GetPdfBool(object sourceObject)
-        {
-            var sourceString = string.Empty;
-
-            if (!Convert.IsDBNull(sourceObject)) sourceString = (string) sourceObject;
-
-            return !bool.TryParse(sourceString, out var destBool) || destBool;
-        }
 
         /// <summary>
         ///     Return an <see cref="TransferDestination" /> value for the specified destination
         /// </summary>
         /// <param name="destination">Retrieve the config for this destination</param>
         /// <returns></returns>
-        private static TransferDestination GetTransferDestination(string destination)
+        public static TransferDestination GetTransferDestination(string destination)
         {
             var config = new TransferDestination
             {
@@ -422,14 +409,7 @@ namespace Lurgle.Transfer.Classes
                     $"{destination}MailIfSuccess"]),
                 DownloadDays =
                     GetInt(ConfigurationManager.AppSettings[
-                        $"{destination}DownloadDays"]),
-                ConvertPdf =
-                    GetBool(ConfigurationManager.AppSettings[
-                        $"{destination}ConvertPdf"]),
-                PdfTarget = GetPdfTarget(ConfigurationManager.AppSettings[
-                    $"{destination}PdfVersion"]),
-                PdfKeepOriginal = GetPdfBool(ConfigurationManager.AppSettings[
-                    $"{destination}PdfKeepOriginal"])
+                        $"{destination}DownloadDays"])
             };
 
             //Backward compatibility
@@ -508,14 +488,7 @@ namespace Lurgle.Transfer.Classes
                         $"{destination}MailIfSuccess"]),
                     DownloadDays =
                         GetInt(ConfigurationManager.AppSettings[
-                            $"{destination}DownloadDays"]),
-                    ConvertPdf =
-                        GetBool(ConfigurationManager.AppSettings[
-                            $"{destination}ConvertPdf"]),
-                    PdfTarget = GetPdfTarget(ConfigurationManager.AppSettings[
-                        $"{destination}PdfVersion"]),
-                    PdfKeepOriginal = GetPdfBool(ConfigurationManager.AppSettings[
-                        $"{destination}PdfKeepOriginal"])
+                            $"{destination}DownloadDays"])
                 };
 
             if (string.IsNullOrEmpty(config.MailToError)) config.MailToError = config.MailTo;
