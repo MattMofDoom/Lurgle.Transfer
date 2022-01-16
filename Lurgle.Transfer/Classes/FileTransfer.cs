@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using FluentFTP;
 using FluentFTP.Proxy;
 using Flurl;
@@ -135,7 +136,7 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
-        ///     SFTP Configuration
+        ///     Transfer Configuration
         /// </summary>
         public TransferDestination TransferConfig { get; }
 
@@ -158,12 +159,12 @@ namespace Lurgle.Transfer.Classes
 
 
         /// <summary>
-        ///     Connect to the configured SFTP server
+        ///     Connect to the configured server
         /// </summary>
         /// <returns></returns>
         public TransferResult Connect()
         {
-            var sftpResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
+            var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
 
             try
             {
@@ -179,12 +180,12 @@ namespace Lurgle.Transfer.Classes
             }
             catch (Exception ex)
             {
-                sftpResult.ErrorDetails = ex;
-                sftpResult.Status = TransferStatus.Error;
+                transferResult.ErrorDetails = ex;
+                transferResult.Status = TransferStatus.Error;
             }
 
 
-            return sftpResult;
+            return transferResult;
         }
 
         /// <summary>
@@ -193,7 +194,7 @@ namespace Lurgle.Transfer.Classes
         /// <returns></returns>
         public TransferResult Disconnect()
         {
-            var sftpResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
+            var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
 
             try
             {
@@ -211,11 +212,11 @@ namespace Lurgle.Transfer.Classes
             }
             catch (Exception ex)
             {
-                sftpResult.Status = TransferStatus.Error;
-                sftpResult.ErrorDetails = ex;
+                transferResult.Status = TransferStatus.Error;
+                transferResult.ErrorDetails = ex;
             }
 
-            return sftpResult;
+            return transferResult;
         }
 
         /// <summary>
@@ -249,8 +250,8 @@ namespace Lurgle.Transfer.Classes
                 switch (TransferConfig.TransferMode)
                 {
                     case TransferMode.Sftp:
-                        var sftpList = SftpClient.ListDirectory(filePath).ToList();
-                        listFiles.AddRange(from file in sftpList
+                        var transferList = SftpClient.ListDirectory(filePath).ToList();
+                        listFiles.AddRange(from file in transferList
                             where listFolders || file.IsRegularFile && !file.Name.StartsWith(".")
                             select new TransferInfo(file.Name, file.LastAccessTimeUtc, file.LastWriteTimeUtc,
                                 file.Attributes.Size));
@@ -275,7 +276,7 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
-        ///     Download files via SFTP
+        ///     Download files via FTP/SFTP
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="downloadPath"></param>
@@ -341,19 +342,77 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
-        ///     Send file via SFTP
+        ///     Send all files from the destination or global source path
+        /// </summary>
+        /// <param name="doRetries"></param>
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        public List<TransferResult> SendFiles(bool doRetries = false, bool overWrite = false)
+        {
+            var files = Files.GetFiles(string.IsNullOrEmpty(TransferConfig.SourcePath)
+                ? Transfers.Config.SourcePath
+                : TransferConfig.SourcePath);
+            return SendFiles(files, doRetries, overWrite);
+        }
+
+        /// <summary>
+        ///     Transfer a list of files using a list of string paths
+        /// </summary>
+        /// <param name="fileList"></param>
+        /// <param name="doRetries"></param>
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        public List<TransferResult> SendFiles(IEnumerable<string> fileList, bool doRetries = false,
+            bool overWrite = false)
+        {
+            var files = (from file in fileList where File.Exists(file) select Files.GetFileInfo(file)).ToList();
+            return SendFiles(files, doRetries, overWrite);
+        }
+
+        /// <summary>
+        ///     Transfer a list of files using a list of TransferInfo
+        /// </summary>
+        /// <param name="files"></param>
+        /// <param name="doRetries"></param>
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        public List<TransferResult> SendFiles(List<TransferInfo> files, bool doRetries = false, bool overWrite = false)
+        {
+            var results = new List<TransferResult>();
+            foreach (var file in files)
+            {
+                TransferResult result;
+                var retries = 0;
+                do
+                {
+                    retries++;
+                    if (retries > 1)
+                        Thread.Sleep(TransferConfig.RetryDelay);
+                    result = SendFiles(file.FileName, file.FileName, overWrite);
+                } while (doRetries && result.Status != TransferStatus.Success);
+
+                results.Add(result);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Send file via FTP/SFTP
         /// </summary>
         /// <param name="destFile"></param>
         /// <param name="localPath"></param>
+        /// <param name="overWrite"></param>
         /// <returns></returns>
-        public TransferResult SendFiles(string destFile, string localPath = null)
+        public TransferResult SendFiles(string destFile, string localPath = null, bool overWrite = false)
         {
             var filePath = localPath;
             if (string.IsNullOrEmpty(filePath))
                 filePath = !string.IsNullOrEmpty(TransferConfig.SourcePath)
-                    ? TransferConfig.SourcePath
-                    : Transfers.Config.SourcePath;
+                    ? Path.Combine(TransferConfig.SourcePath, destFile)
+                    : Path.Combine(Transfers.Config.SourcePath, destFile);
             var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
+            var exists = false;
 
             try
             {
@@ -367,26 +426,37 @@ namespace Lurgle.Transfer.Classes
                         break;
                 }
 
-                var sftpPath = Url.Combine(TransferConfig.RemotePath, Path.GetFileName(destFile));
+                var transferPath = Url.Combine(TransferConfig.RemotePath, Path.GetFileName(destFile));
                 var transferFile = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read,
                     TransferConfig.BufferSize);
 
                 switch (TransferConfig.TransferMode)
                 {
                     case TransferMode.Sftp:
-                        SftpClient.UploadFile(transferFile, sftpPath, true);
-                        var fileInfo = SftpClient.GetAttributes(sftpPath);
+                        //SSH.NET will return an exception if overwrite is false and we attempt to upload, so check before upload
+                        exists = SftpClient.Exists(transferPath);
+                        if (overWrite || !exists)
+                            SftpClient.UploadFile(transferFile, transferPath, overWrite);
+                        var fileInfo = SftpClient.GetAttributes(transferPath);
                         transferResult.FileSize = fileInfo.Size;
                         break;
                     case TransferMode.Ftp:
-                        FtpClient.Upload(transferFile, sftpPath, FtpRemoteExists.Overwrite, true);
-                        transferResult.FileSize = FtpClient.GetFileSize(sftpPath);
+                        //Skip doesn't actually work as expected - it deletes the file, so we'll check before upload
+                        exists = FtpClient.FileExists(transferPath);
+                        if (overWrite || !exists)
+                            FtpClient.Upload(transferFile, transferPath,
+                                overWrite ? FtpRemoteExists.Skip : FtpRemoteExists.Overwrite, true);
+
+                        transferResult.FileSize = FtpClient.GetFileSize(transferPath);
                         break;
                 }
 
                 transferFile.Close();
                 transferFile.Dispose();
-                transferResult.Status = TransferStatus.Success;
+                if (!overWrite && exists)
+                    transferResult.Status = TransferStatus.FileExists;
+                else
+                    transferResult.Status = TransferStatus.Success;
             }
             catch (Exception ex)
             {
