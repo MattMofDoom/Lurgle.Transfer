@@ -1,5 +1,6 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 
+using System.Linq;
 using Lurgle.Transfer.Enums;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -113,7 +114,7 @@ namespace Lurgle.Transfer.Classes
             }
 
             if (!string.IsNullOrEmpty(name))
-                Name = config.Name;
+                Name = name;
             if (transferType != null)
                 TransferType = (TransferType) transferType;
             if (transferMode != null)
@@ -190,6 +191,15 @@ namespace Lurgle.Transfer.Classes
                 PdfTarget = (PdfTarget) pdfTarget;
             if (pdfKeepOriginal != null)
                 PdfKeepOriginal = (bool) pdfKeepOriginal;
+
+            // Ensure Destination and Name are set
+            if (string.IsNullOrEmpty(Destination))
+                Destination = string.IsNullOrEmpty(Name)
+                    ? $"Default{Transfers.GetRandomNumber()}"
+                    : string.Concat(name.Where(c => !char.IsWhiteSpace(c)));
+
+            if (string.IsNullOrEmpty(Name))
+                Name = Destination.StartsWith("Default") ? Destination : $"Default{Transfers.GetRandomNumber()}";
 
             if (Port.Equals(-1)) Port = TransferConfig.DefaultSftpPort;
 

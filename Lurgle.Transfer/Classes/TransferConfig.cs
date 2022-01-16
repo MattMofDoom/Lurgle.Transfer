@@ -346,7 +346,7 @@ namespace Lurgle.Transfer.Classes
         /// </summary>
         /// <param name="destination">Retrieve the config for this destination</param>
         /// <returns></returns>
-        public static TransferDestination GetTransferDestination(string destination)
+        private static TransferDestination GetTransferDestination(string destination)
         {
             var config = new TransferDestination
             {
@@ -451,7 +451,7 @@ namespace Lurgle.Transfer.Classes
                     UsePassive = GetBool(ConfigurationManager.AppSettings[
                         $"{destination}SftpUsePassive"]),
                     RemotePath = ConfigurationManager.AppSettings[
-                        $"{destination}SftpPath"],
+                        $"{destination}transferPath"],
                     SourcePath = ConfigurationManager.AppSettings[
                         $"{destination}SftpSourcePath"],
                     DestPath = ConfigurationManager.AppSettings[

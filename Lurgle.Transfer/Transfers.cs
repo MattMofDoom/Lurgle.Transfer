@@ -1,4 +1,5 @@
-﻿using Lurgle.Transfer.Classes;
+﻿using System;
+using Lurgle.Transfer.Classes;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -32,6 +33,16 @@ namespace Lurgle.Transfer
         public static void Init()
         {
             if (Config == null) SetConfig();
+        }
+
+        /// <summary>
+        ///     returns random number
+        /// </summary>
+        /// <returns></returns>
+        public static int GetRandomNumber()
+        {
+            var randomGen = new Random((int) DateTime.Now.Ticks & 0x0000FFFF);
+            return randomGen.Next();
         }
     }
 }

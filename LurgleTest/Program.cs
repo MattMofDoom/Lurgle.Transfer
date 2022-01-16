@@ -63,6 +63,7 @@ namespace LurgleTest
                                         ? string.Empty
                                         : transferResult.ErrorDetails.ToString());
                             } while (transferResult.Status != TransferStatus.Success &&
+                                     transferResult.Status != TransferStatus.FileExists &&
                                      retries < transfer.TransferConfig.RetryCount);
                         }
 

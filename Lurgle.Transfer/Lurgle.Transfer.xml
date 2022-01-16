@@ -58,7 +58,7 @@
         </member>
         <member name="P:Lurgle.Transfer.Classes.FileTransfer.TransferConfig">
             <summary>
-                SFTP Configuration
+                Transfer Configuration
             </summary>
         </member>
         <member name="P:Lurgle.Transfer.Classes.FileTransfer.SftpClient">
@@ -78,7 +78,7 @@
         </member>
         <member name="M:Lurgle.Transfer.Classes.FileTransfer.Connect">
             <summary>
-                Connect to the configured SFTP server
+                Connect to the configured server
             </summary>
             <returns></returns>
         </member>
@@ -98,19 +98,46 @@
         </member>
         <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadFiles(System.String,System.String,System.String)">
             <summary>
-                Download files via SFTP
+                Download files via FTP/SFTP
             </summary>
             <param name="fileName"></param>
             <param name="downloadPath"></param>
             <param name="destPath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.Boolean,System.Boolean)">
             <summary>
-                Send file via SFTP
+                Send all files from the destination or global source path
+            </summary>
+            <param name="doRetries"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Boolean)">
+            <summary>
+                Transfer a list of files using a list of string paths
+            </summary>
+            <param name="fileList"></param>
+            <param name="doRetries"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.Collections.Generic.List{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.Boolean)">
+            <summary>
+                Transfer a list of files using a list of TransferInfo
+            </summary>
+            <param name="files"></param>
+            <param name="doRetries"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.String,System.String,System.Boolean)">
+            <summary>
+                Send file via FTP/SFTP
             </summary>
             <param name="destFile"></param>
             <param name="localPath"></param>
+            <param name="overWrite"></param>
             <returns></returns>
         </member>
         <member name="T:Lurgle.Transfer.Classes.TransferConfig">
@@ -911,7 +938,7 @@
         </member>
         <member name="T:Lurgle.Transfer.Enums.TransferStatus">
             <summary>
-                Master list of SFTP status results
+                Master list of transfer status results
             </summary>
         </member>
         <member name="F:Lurgle.Transfer.Enums.TransferStatus.Success">
@@ -922,6 +949,11 @@
         <member name="F:Lurgle.Transfer.Enums.TransferStatus.Error">
             <summary>
                 Error
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.TransferStatus.FileExists">
+            <summary>
+                File Exists
             </summary>
         </member>
         <member name="F:Lurgle.Transfer.Enums.TransferStatus.Unknown">
@@ -998,26 +1030,30 @@
         </member>
         <member name="M:Lurgle.Transfer.Files.GetNewName(System.String,Lurgle.Transfer.Enums.AppendType)">
             <summary>
-                Add a random number to the beginning of a file name
+                Add a random number to the beginning or end of a file name
             </summary>
             <param name="filePath">Path to the file</param>
             <param name="appendType"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.GetRandomNumber">
+        <member name="M:Lurgle.Transfer.Files.DeleteCompressedFiles(Lurgle.Transfer.Classes.TransferDestination,System.Nullable{Lurgle.Transfer.Enums.CompressType},System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo})">
             <summary>
-                returns random number
+                Delete compressed files that match the compression type
             </summary>
+            <param name="destination"></param>
+            <param name="compressType"></param>
+            <param name="compressedFiles"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.CompressFiles(Lurgle.Transfer.Enums.CompressType,System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Files.CompressFiles(Lurgle.Transfer.Classes.TransferDestination,System.Nullable{Lurgle.Transfer.Enums.CompressType},System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.String,System.String)">
             <summary>
                 Compress files given a configured compression type
             </summary>
+            <param name="destination"></param>
             <param name="compressType"></param>
             <param name="sourceFiles"></param>
             <param name="useConverted"></param>
-            <param name="sourcePath"></param>
+            <param name="zipFilePath"></param>
             <param name="zipPrefix"></param>
             <returns></returns>
         </member>
@@ -1047,18 +1083,20 @@
             <param name="useConverted"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.ArchiveFiles(System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Files.ArchiveFiles(Lurgle.Transfer.Classes.TransferDestination,System.String,System.String)">
             <summary>
                 Move files to an archive folder
             </summary>
-            <param name="sourcePath"></param>
-            <param name="destPath"></param>
+            <param name="destination"></param>
+            <param name="path"></param>
+            <param name="archivePath"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.DoCleanup(System.String,System.Int32)">
+        <member name="M:Lurgle.Transfer.Files.CleanArchivedFiles(Lurgle.Transfer.Classes.TransferDestination,System.String,System.Nullable{System.Int32})">
             <summary>
                 Remove archived files after a given number of days
             </summary>
+            <param name="destination"></param>
             <param name="archivePath"></param>
             <param name="archiveDays"></param>
             <returns></returns>
@@ -1082,6 +1120,12 @@
             <summary>
                 Initialisation transfer config
             </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Transfers.GetRandomNumber">
+            <summary>
+                returns random number
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>
