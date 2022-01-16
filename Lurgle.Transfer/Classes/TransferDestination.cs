@@ -53,9 +53,7 @@ namespace Lurgle.Transfer.Classes
         /// <param name="mailIfError"></param>
         /// <param name="mailIfSuccess"></param>
         /// <param name="downloadDays"></param>
-        /// <param name="convertPdf"></param>
-        /// <param name="pdfTarget"></param>
-        /// <param name="pdfKeepOriginal"></param>
+
         public TransferDestination(TransferDestination config = null, string name = null,
             TransferType? transferType = null,
             TransferMode? transferMode = null, string destination = null, TransferAuth? authMode = null,
@@ -67,8 +65,7 @@ namespace Lurgle.Transfer.Classes
             bool? retryFailConnect = null, bool? useProxy = null, string proxyType = null, string proxyServer = null,
             int? proxyPort = null, string proxyUser = null, string proxyPassword = null,
             CompressType? compressType = null, string zipPrefix = null, string mailTo = null, string mailToError = null,
-            bool? mailIfError = null, bool? mailIfSuccess = null, int? downloadDays = null, bool? convertPdf = null,
-            PdfTarget? pdfTarget = null, bool? pdfKeepOriginal = null)
+            bool? mailIfError = null, bool? mailIfSuccess = null, int? downloadDays = null)
         {
             if (config != null)
             {
@@ -108,9 +105,6 @@ namespace Lurgle.Transfer.Classes
                 MailIfError = config.MailIfError;
                 MailIfSuccess = config.MailIfSuccess;
                 DownloadDays = config.DownloadDays;
-                ConvertPdf = config.ConvertPdf;
-                PdfTarget = config.PdfTarget;
-                PdfKeepOriginal = config.PdfKeepOriginal;
             }
 
             if (!string.IsNullOrEmpty(name))
@@ -185,12 +179,6 @@ namespace Lurgle.Transfer.Classes
                 MailIfSuccess = (bool) mailIfSuccess;
             if (downloadDays != null)
                 DownloadDays = (int) downloadDays;
-            if (convertPdf != null)
-                ConvertPdf = (bool) convertPdf;
-            if (pdfTarget != null)
-                PdfTarget = (PdfTarget) pdfTarget;
-            if (pdfKeepOriginal != null)
-                PdfKeepOriginal = (bool) pdfKeepOriginal;
 
             // Ensure Destination and Name are set
             if (string.IsNullOrEmpty(Destination))
@@ -408,20 +396,5 @@ namespace Lurgle.Transfer.Classes
         ///     Maximum age of files to download
         /// </summary>
         public int DownloadDays { get; set; }
-
-        /// <summary>
-        ///     Convert PDFs to another PDF version before sending
-        /// </summary>
-        public bool ConvertPdf { get; set; }
-
-        /// <summary>
-        ///     Target PDF version
-        /// </summary>
-        public PdfTarget PdfTarget { get; set; }
-
-        /// <summary>
-        ///     Keep the original PDF after conversion
-        /// </summary>
-        public bool PdfKeepOriginal { get; set; }
     }
 }

@@ -14,7 +14,7 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle FTP SFTP SSH SSH.NET FluentFTP File Transfer compression compressed uncompressed gzip zip</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.1.9</Version>
+    <Version>1.1.10</Version>
     <PackageReleaseNotes>
       * Add XML documentation
       * Rename to Lurgle.Transfer
@@ -22,7 +22,9 @@
       * Unrestricted destination configs
       * Add constructors
       * Enhancements to upload, compression, archive routines
-</PackageReleaseNotes>
+      * Update FluentFTP
+      * Revert TransferConfig.GetTransferDestination to public
+      * Remove configs for PDF conversion</PackageReleaseNotes>
     <Product>Lurgle.Transfer</Product>
     <PackageId>Lurgle.Transfer</PackageId>
     <AssemblyName>Lurgle.Transfer</AssemblyName>
@@ -34,7 +36,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentFTP" Version="35.2.3" />
+    <PackageReference Include="FluentFTP" Version="36.1.0" />
     <PackageReference Include="Flurl" Version="3.0.2" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
