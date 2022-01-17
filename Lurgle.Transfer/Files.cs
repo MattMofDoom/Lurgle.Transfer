@@ -219,7 +219,8 @@ namespace Lurgle.Transfer
         /// <param name="sourceFiles"></param>
         /// <param name="fileSelection"></param>
         /// <returns></returns>
-        private static CompressResult CompressGzip(IEnumerable<TransferInfo> sourceFiles, FileSelection fileSelection = FileSelection.UseFileName)
+        private static CompressResult CompressGzip(IEnumerable<TransferInfo> sourceFiles,
+            FileSelection fileSelection = FileSelection.UseFileName)
         {
             var compressResult = new CompressResult(CompressType.Gzip) {Status = CompressStatus.Success};
 
@@ -232,7 +233,8 @@ namespace Lurgle.Transfer
             foreach (var fileInfo in compressResult.SourceFiles)
                 try
                 {
-                    var destFilePath = string.Concat(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName,
+                    var destFilePath = string.Concat(
+                        fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName,
                         ".gz");
 
                     compressResult.LastFile = Path.GetFileName(fileInfo.FileName);
@@ -304,7 +306,9 @@ namespace Lurgle.Transfer
                     try
                     {
                         compressResult.LastFile = Path.GetFileName(fileInfo.FileName);
-                        var entryName = Path.GetFileName(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName);
+                        var entryName = Path.GetFileName(fileSelection == FileSelection.UseFileName
+                            ? fileInfo.FileName
+                            : fileInfo.SourceFileName);
 
                         zipFile.CreateEntryFromFile(fileInfo.FileName, entryName, CompressionLevel.Optimal);
                     }
@@ -335,7 +339,8 @@ namespace Lurgle.Transfer
         /// <param name="sourceFiles"></param>
         /// <param name="fileSelection"></param>
         /// <returns></returns>
-        private static CompressResult CompressZipMulti(IEnumerable<TransferInfo> sourceFiles, FileSelection fileSelection = FileSelection.UseFileName)
+        private static CompressResult CompressZipMulti(IEnumerable<TransferInfo> sourceFiles,
+            FileSelection fileSelection = FileSelection.UseFileName)
         {
             var compressResult = new CompressResult(CompressType.Zip) {Status = CompressStatus.Success};
 
@@ -348,7 +353,8 @@ namespace Lurgle.Transfer
             foreach (var fileInfo in compressResult.SourceFiles)
                 try
                 {
-                    var destFilePath = string.Concat(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName,
+                    var destFilePath = string.Concat(
+                        fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName,
                         ".zip");
 
                     compressResult.LastFile = Path.GetFileName(fileInfo.FileName);
@@ -356,7 +362,9 @@ namespace Lurgle.Transfer
                         FileShare.ReadWrite, 262144);
                     var zipFile = new ZipArchive(zipStream, ZipArchiveMode.Create);
 
-                    var entryName = Path.GetFileName(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName);
+                    var entryName = Path.GetFileName(fileSelection == FileSelection.UseFileName
+                        ? fileInfo.FileName
+                        : fileInfo.SourceFileName);
 
                     zipFile.CreateEntryFromFile(fileInfo.FileName, entryName, CompressionLevel.Optimal);
                     zipFile.Dispose();
@@ -384,7 +392,6 @@ namespace Lurgle.Transfer
         public static CompressResult ArchiveFiles(TransferDestination destination, string path = null,
             string archivePath = null)
         {
-            var archiveResult = new CompressResult(CompressType.Uncompressed) {Status = CompressStatus.Success};
             var sourcePath = path;
             var destPath = archivePath;
 
@@ -398,13 +405,26 @@ namespace Lurgle.Transfer
                     ? Transfers.Config.ArchivePath
                     : destination.ArchivePath;
 
+            return ArchiveFiles(sourcePath, destPath);
+        }
+
+        /// <summary>
+        /// Move files to an archive folder
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="archivePath"></param>
+        /// <returns></returns>
+        public static CompressResult ArchiveFiles(string sourcePath, string archivePath)
+        {
+            var archiveResult = new CompressResult(CompressType.Uncompressed) {Status = CompressStatus.Success};
+
             if (Directory.Exists(sourcePath))
                 foreach (var filePath in Directory.GetFiles(sourcePath))
                     try
                     {
                         archiveResult.SourceFiles.Add(GetFileInfo(filePath));
                         archiveResult.LastFile = Path.GetFileName(filePath);
-                        var destFilePath = Path.Combine(destPath, archiveResult.LastFile);
+                        var destFilePath = Path.Combine(archivePath, archiveResult.LastFile);
 
                         if (File.Exists(destFilePath)) File.Delete(destFilePath);
 
@@ -433,7 +453,6 @@ namespace Lurgle.Transfer
         public static CompressResult CleanArchivedFiles(TransferDestination destination, string archivePath = null,
             int? archiveDays = null)
         {
-            var archiveResult = new CompressResult(CompressType.Uncompressed) {Status = CompressStatus.Success};
             var destPath = archivePath;
             if (string.IsNullOrEmpty(destPath))
                 destPath = string.IsNullOrEmpty(destination.ArchivePath)
@@ -448,9 +467,22 @@ namespace Lurgle.Transfer
                     ? Transfers.Config.ArchiveDays
                     : destination.ArchiveDays;
 
-            if (days > 0 && Directory.Exists(destPath))
-                foreach (var filePath in Directory.GetFiles(destPath).Where(fileName =>
-                             File.GetCreationTime(fileName) < DateTime.Now.AddDays(-days)).ToList())
+            return CleanArchivedFiles(destPath, days);
+
+        }
+
+        /// <summary>
+        /// Remove archived files after a given number of days
+        /// </summary>
+        /// <param name="archivePath"></param>
+        /// <param name="archiveDays"></param>
+        /// <returns></returns>
+        public static CompressResult CleanArchivedFiles(string archivePath, int archiveDays)
+        {
+            var archiveResult = new CompressResult(CompressType.Uncompressed) {Status = CompressStatus.Success};
+            if (archiveDays > 0 && Directory.Exists(archivePath))
+                foreach (var filePath in Directory.GetFiles(archivePath).Where(fileName =>
+                             File.GetCreationTime(fileName) < DateTime.Now.AddDays(-archiveDays)).ToList())
                     try
                     {
                         archiveResult.LastFile = Path.GetFileName(filePath);
@@ -465,7 +497,7 @@ namespace Lurgle.Transfer
                         archiveResult.ErrorDetails = ex;
                         break;
                     }
-            else if (!Directory.Exists(destPath)) archiveResult.Status = CompressStatus.PathNotFound;
+            else if (!Directory.Exists(archivePath)) archiveResult.Status = CompressStatus.PathNotFound;
 
             return archiveResult;
         }
