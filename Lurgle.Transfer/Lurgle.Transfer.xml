@@ -1059,11 +1059,27 @@
             <param name="archivePath"></param>
             <returns></returns>
         </member>
+        <member name="M:Lurgle.Transfer.Files.ArchiveFiles(System.String,System.String)">
+            <summary>
+            Move files to an archive folder
+            </summary>
+            <param name="sourcePath"></param>
+            <param name="archivePath"></param>
+            <returns></returns>
+        </member>
         <member name="M:Lurgle.Transfer.Files.CleanArchivedFiles(Lurgle.Transfer.Classes.TransferDestination,System.String,System.Nullable{System.Int32})">
             <summary>
                 Remove archived files after a given number of days
             </summary>
             <param name="destination"></param>
+            <param name="archivePath"></param>
+            <param name="archiveDays"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Files.CleanArchivedFiles(System.String,System.Int32)">
+            <summary>
+            Remove archived files after a given number of days
+            </summary>
             <param name="archivePath"></param>
             <param name="archiveDays"></param>
             <returns></returns>
