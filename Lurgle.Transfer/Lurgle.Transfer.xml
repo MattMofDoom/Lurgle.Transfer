@@ -833,6 +833,21 @@
                 An email error occurred
             </summary>
         </member>
+        <member name="T:Lurgle.Transfer.Enums.FileSelection">
+            <summary>
+            Select which filename to use from TransferInfo
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.FileSelection.UseFileName">
+            <summary>
+            Use TransferInfo.FileName
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.FileSelection.UseSourceFileName">
+            <summary>
+            Use TransferInfo.SourceFileName
+            </summary>
+        </member>
         <member name="T:Lurgle.Transfer.Enums.FolderResult">
             <summary>
                 Result of folder validation
@@ -997,42 +1012,42 @@
             <param name="compressedFiles"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.CompressFiles(Lurgle.Transfer.Classes.TransferDestination,System.Nullable{Lurgle.Transfer.Enums.CompressType},System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Files.CompressFiles(Lurgle.Transfer.Classes.TransferDestination,System.Nullable{Lurgle.Transfer.Enums.CompressType},System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},Lurgle.Transfer.Enums.FileSelection,System.String,System.String)">
             <summary>
                 Compress files given a configured compression type
             </summary>
             <param name="destination"></param>
             <param name="compressType"></param>
             <param name="sourceFiles"></param>
-            <param name="useConverted"></param>
+            <param name="fileSelection"></param>
             <param name="zipFilePath"></param>
             <param name="zipPrefix"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.CompressGzip(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean)">
+        <member name="M:Lurgle.Transfer.Files.CompressGzip(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},Lurgle.Transfer.Enums.FileSelection)">
             <summary>
                 Compress files to Gzip archives
             </summary>
             <param name="sourceFiles"></param>
-            <param name="useConverted"></param>
+            <param name="fileSelection"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.CompressZip(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Files.CompressZip(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},Lurgle.Transfer.Enums.FileSelection,System.String,System.String)">
             <summary>
                 Compress files to a ZIP archive
             </summary>
             <param name="sourceFiles"></param>
-            <param name="useConverted"></param>
+            <param name="fileSelection"></param>
             <param name="sourcePath"></param>
             <param name="zipPrefix"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Files.CompressZipMulti(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},System.Boolean)">
+        <member name="M:Lurgle.Transfer.Files.CompressZipMulti(System.Collections.Generic.IEnumerable{Lurgle.Transfer.Classes.TransferInfo},Lurgle.Transfer.Enums.FileSelection)">
             <summary>
                 Compress files to individual ZIP files
             </summary>
             <param name="sourceFiles"></param>
-            <param name="useConverted"></param>
+            <param name="fileSelection"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Transfer.Files.ArchiveFiles(Lurgle.Transfer.Classes.TransferDestination,System.String,System.String)">

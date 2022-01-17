@@ -169,13 +169,13 @@ namespace Lurgle.Transfer
         /// <param name="destination"></param>
         /// <param name="compressType"></param>
         /// <param name="sourceFiles"></param>
-        /// <param name="useConverted"></param>
+        /// <param name="fileSelection"></param>
         /// <param name="zipFilePath"></param>
         /// <param name="zipPrefix"></param>
         /// <returns></returns>
         public static CompressResult CompressFiles(TransferDestination destination, CompressType? compressType = null,
             IEnumerable<TransferInfo> sourceFiles = null,
-            bool useConverted = false, string zipFilePath = null, string zipPrefix = null)
+            FileSelection fileSelection = FileSelection.UseFileName, string zipFilePath = null, string zipPrefix = null)
         {
             var compressResult = new CompressResult(compressType ?? destination.CompressType);
             List<TransferInfo> files;
@@ -190,7 +190,7 @@ namespace Lurgle.Transfer
             switch (compressType)
             {
                 case CompressType.Gzip:
-                    compressResult = CompressGzip(files, useConverted);
+                    compressResult = CompressGzip(files, fileSelection);
                     break;
                 case CompressType.Zip:
                     var sourcePath = zipFilePath;
@@ -198,10 +198,10 @@ namespace Lurgle.Transfer
                         sourcePath = string.IsNullOrEmpty(destination.SourcePath)
                             ? Transfers.Config.SourcePath
                             : destination.SourcePath;
-                    compressResult = CompressZip(files, useConverted, sourcePath, zipPrefix);
+                    compressResult = CompressZip(files, fileSelection, sourcePath, zipPrefix);
                     break;
                 case CompressType.ZipPerFile:
-                    compressResult = CompressZipMulti(files, useConverted);
+                    compressResult = CompressZipMulti(files, fileSelection);
                     break;
                 default:
                     compressResult.Status = CompressStatus.NotCompressed;
@@ -217,9 +217,9 @@ namespace Lurgle.Transfer
         ///     Compress files to Gzip archives
         /// </summary>
         /// <param name="sourceFiles"></param>
-        /// <param name="useConverted"></param>
+        /// <param name="fileSelection"></param>
         /// <returns></returns>
-        private static CompressResult CompressGzip(IEnumerable<TransferInfo> sourceFiles, bool useConverted)
+        private static CompressResult CompressGzip(IEnumerable<TransferInfo> sourceFiles, FileSelection fileSelection = FileSelection.UseFileName)
         {
             var compressResult = new CompressResult(CompressType.Gzip) {Status = CompressStatus.Success};
 
@@ -232,7 +232,7 @@ namespace Lurgle.Transfer
             foreach (var fileInfo in compressResult.SourceFiles)
                 try
                 {
-                    var destFilePath = string.Concat(useConverted ? fileInfo.FileName : fileInfo.SourceFileName,
+                    var destFilePath = string.Concat(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName,
                         ".gz");
 
                     compressResult.LastFile = Path.GetFileName(fileInfo.FileName);
@@ -270,11 +270,11 @@ namespace Lurgle.Transfer
         ///     Compress files to a ZIP archive
         /// </summary>
         /// <param name="sourceFiles"></param>
-        /// <param name="useConverted"></param>
+        /// <param name="fileSelection"></param>
         /// <param name="sourcePath"></param>
         /// <param name="zipPrefix"></param>
         /// <returns></returns>
-        private static CompressResult CompressZip(IEnumerable<TransferInfo> sourceFiles, bool useConverted,
+        private static CompressResult CompressZip(IEnumerable<TransferInfo> sourceFiles, FileSelection fileSelection,
             string sourcePath,
             string zipPrefix = null)
         {
@@ -304,7 +304,7 @@ namespace Lurgle.Transfer
                     try
                     {
                         compressResult.LastFile = Path.GetFileName(fileInfo.FileName);
-                        var entryName = Path.GetFileName(useConverted ? fileInfo.FileName : fileInfo.SourceFileName);
+                        var entryName = Path.GetFileName(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName);
 
                         zipFile.CreateEntryFromFile(fileInfo.FileName, entryName, CompressionLevel.Optimal);
                     }
@@ -333,9 +333,9 @@ namespace Lurgle.Transfer
         ///     Compress files to individual ZIP files
         /// </summary>
         /// <param name="sourceFiles"></param>
-        /// <param name="useConverted"></param>
+        /// <param name="fileSelection"></param>
         /// <returns></returns>
-        private static CompressResult CompressZipMulti(IEnumerable<TransferInfo> sourceFiles, bool useConverted)
+        private static CompressResult CompressZipMulti(IEnumerable<TransferInfo> sourceFiles, FileSelection fileSelection = FileSelection.UseFileName)
         {
             var compressResult = new CompressResult(CompressType.Zip) {Status = CompressStatus.Success};
 
@@ -348,7 +348,7 @@ namespace Lurgle.Transfer
             foreach (var fileInfo in compressResult.SourceFiles)
                 try
                 {
-                    var destFilePath = string.Concat(useConverted ? fileInfo.FileName : fileInfo.SourceFileName,
+                    var destFilePath = string.Concat(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName,
                         ".zip");
 
                     compressResult.LastFile = Path.GetFileName(fileInfo.FileName);
@@ -356,7 +356,7 @@ namespace Lurgle.Transfer
                         FileShare.ReadWrite, 262144);
                     var zipFile = new ZipArchive(zipStream, ZipArchiveMode.Create);
 
-                    var entryName = Path.GetFileName(useConverted ? fileInfo.FileName : fileInfo.SourceFileName);
+                    var entryName = Path.GetFileName(fileSelection == FileSelection.UseFileName ? fileInfo.FileName : fileInfo.SourceFileName);
 
                     zipFile.CreateEntryFromFile(fileInfo.FileName, entryName, CompressionLevel.Optimal);
                     zipFile.Dispose();
