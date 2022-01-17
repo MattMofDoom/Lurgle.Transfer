@@ -245,6 +245,7 @@ namespace Lurgle.Transfer.Classes
             if (string.IsNullOrEmpty(configValue))
                 configValue = ConfigurationManager.AppSettings["SftpDestinations"];
 
+            if (string.IsNullOrEmpty(configValue)) return result;
             var destinations = configValue.Split(',').ToList();
 
             foreach (var destination in destinations)
