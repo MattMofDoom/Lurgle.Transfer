@@ -14,7 +14,7 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle FTP SFTP SSH SSH.NET FluentFTP File Transfer compression compressed uncompressed gzip zip</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.1.10</Version>
+    <Version>1.1.11</Version>
     <PackageReleaseNotes>
       * Add XML documentation
       * Rename to Lurgle.Transfer
