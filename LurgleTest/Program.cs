@@ -5,6 +5,9 @@ using Lurgle.Transfer;
 using Lurgle.Transfer.Classes;
 using Lurgle.Transfer.Enums;
 
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedParameter.Local
+
 namespace LurgleTest
 {
     internal class Program
@@ -41,33 +44,6 @@ namespace LurgleTest
                     transfer.TransferConfig.Name, transfer.Destination);
                 switch (transfer.TransferConfig.TransferType)
                 {
-                    case TransferType.Upload:
-                        foreach (var file in Files.GetFiles(destination.Value.SourcePath))
-                        {
-                            retries = 0;
-                            do
-                            {
-                                retries++;
-                                if (retries > 1)
-                                {
-                                    Console.WriteLine("Await {0} seconds for retry ...",
-                                        transfer.TransferConfig.RetryDelay / 1000);
-                                    Thread.Sleep(transfer.TransferConfig.RetryDelay);
-                                }
-
-                                transferResult = transfer.SendFiles(Path.GetFileName(file.FileName), file.FileName);
-
-                                Console.WriteLine("Send Result: File {0}, Result {1} {2}", file.FileName,
-                                    transferResult.Status,
-                                    transferResult.ErrorDetails == null
-                                        ? string.Empty
-                                        : transferResult.ErrorDetails.ToString());
-                            } while (transferResult.Status != TransferStatus.Success &&
-                                     transferResult.Status != TransferStatus.FileExists &&
-                                     retries < transfer.TransferConfig.RetryCount);
-                        }
-
-                        break;
                     case TransferType.Download:
                         retries = 0;
                         do
@@ -122,6 +98,34 @@ namespace LurgleTest
                                 } while (transferResult.Status != TransferStatus.Success &&
                                          retries < transfer.TransferConfig.RetryCount);
                             }
+                        }
+
+                        break;
+                    case TransferType.Upload:
+                    default:
+                        foreach (var file in Files.GetFiles(destination.Value.SourcePath))
+                        {
+                            retries = 0;
+                            do
+                            {
+                                retries++;
+                                if (retries > 1)
+                                {
+                                    Console.WriteLine("Await {0} seconds for retry ...",
+                                        transfer.TransferConfig.RetryDelay / 1000);
+                                    Thread.Sleep(transfer.TransferConfig.RetryDelay);
+                                }
+
+                                transferResult = transfer.SendFiles(Path.GetFileName(file.FileName), file.FileName);
+
+                                Console.WriteLine("Send Result: File {0}, Result {1} {2}", file.FileName,
+                                    transferResult.Status,
+                                    transferResult.ErrorDetails == null
+                                        ? string.Empty
+                                        : transferResult.ErrorDetails.ToString());
+                            } while (transferResult.Status != TransferStatus.Success &&
+                                     transferResult.Status != TransferStatus.FileExists &&
+                                     retries < transfer.TransferConfig.RetryCount);
                         }
 
                         break;

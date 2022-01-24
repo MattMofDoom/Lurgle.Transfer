@@ -835,17 +835,17 @@
         </member>
         <member name="T:Lurgle.Transfer.Enums.FileSelection">
             <summary>
-            Select which filename to use from TransferInfo
+                Select which filename to use from TransferInfo
             </summary>
         </member>
         <member name="F:Lurgle.Transfer.Enums.FileSelection.UseFileName">
             <summary>
-            Use TransferInfo.FileName
+                Use TransferInfo.FileName
             </summary>
         </member>
         <member name="F:Lurgle.Transfer.Enums.FileSelection.UseSourceFileName">
             <summary>
-            Use TransferInfo.SourceFileName
+                Use TransferInfo.SourceFileName
             </summary>
         </member>
         <member name="T:Lurgle.Transfer.Enums.FolderResult">

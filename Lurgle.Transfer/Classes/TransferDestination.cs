@@ -53,7 +53,6 @@ namespace Lurgle.Transfer.Classes
         /// <param name="mailIfError"></param>
         /// <param name="mailIfSuccess"></param>
         /// <param name="downloadDays"></param>
-
         public TransferDestination(TransferDestination config = null, string name = null,
             TransferType? transferType = null,
             TransferMode? transferMode = null, string destination = null, TransferAuth? authMode = null,
