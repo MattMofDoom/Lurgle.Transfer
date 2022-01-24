@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// ReSharper disable UnusedMember.Global
 
 namespace Lurgle.Transfer.Enums
 {
     /// <summary>
-    /// Select which filename to use from TransferInfo
+    ///     Select which filename to use from TransferInfo
     /// </summary>
     public enum FileSelection
     {
         /// <summary>
-        /// Use TransferInfo.FileName
+        ///     Use TransferInfo.FileName
         /// </summary>
         UseFileName,
+
         /// <summary>
-        /// Use TransferInfo.SourceFileName
+        ///     Use TransferInfo.SourceFileName
         /// </summary>
         UseSourceFileName
     }
