@@ -132,6 +132,11 @@ namespace Lurgle.Transfer.Classes
                     }
 
                     break;
+                case TransferMode.Smb1:
+                case TransferMode.Smb2:
+                case TransferMode.Smb3:
+                    SmbClient = new SmbClient(this);
+                    break;
             }
         }
 
@@ -146,6 +151,11 @@ namespace Lurgle.Transfer.Classes
         private SftpClient SftpClient { get; }
 
         private FtpClient FtpClient { get; }
+
+        private SmbClient SmbClient { get; }
+
+        private bool SmbConnected { get; set; }
+
 
         /// <summary>
         ///     Use a certificate for authentication
@@ -176,6 +186,11 @@ namespace Lurgle.Transfer.Classes
                     case TransferMode.Ftp:
                         FtpClient.Connect();
                         break;
+                    case TransferMode.Smb1:
+                    case TransferMode.Smb2:
+                    case TransferMode.Smb3:
+                        SmbConnected = SmbClient.Connect();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -183,7 +198,6 @@ namespace Lurgle.Transfer.Classes
                 transferResult.ErrorDetails = ex;
                 transferResult.Status = TransferStatus.Error;
             }
-
 
             return transferResult;
         }
@@ -207,6 +221,11 @@ namespace Lurgle.Transfer.Classes
                     case TransferMode.Ftp:
                         FtpClient.Disconnect();
                         FtpClient.Dispose();
+                        break;
+                    case TransferMode.Smb1:
+                    case TransferMode.Smb2:
+                    case TransferMode.Smb3:
+                        SmbConnected = SmbClient.Disconnect();
                         break;
                 }
             }
@@ -240,10 +259,11 @@ namespace Lurgle.Transfer.Classes
                 switch (TransferConfig.TransferMode)
                 {
                     case TransferMode.Sftp when !SftpClient.IsConnected:
-                        SftpClient.Connect();
-                        break;
                     case TransferMode.Ftp when !FtpClient.IsConnected:
-                        FtpClient.Connect();
+                    case TransferMode.Smb1 when !SmbConnected:
+                    case TransferMode.Smb2 when !SmbConnected:
+                    case TransferMode.Smb3 when !SmbConnected:
+                        Connect();
                         break;
                 }
 
@@ -254,13 +274,23 @@ namespace Lurgle.Transfer.Classes
                         listFiles.AddRange(from file in transferList
                             where listFolders || file.IsRegularFile && !file.Name.StartsWith(".")
                             select new TransferInfo(file.Name, file.LastAccessTimeUtc, file.LastWriteTimeUtc,
-                                file.Attributes.Size));
+                                file.Attributes.Size,
+                                file.IsRegularFile ? InfoType.File :
+                                file.IsDirectory ? InfoType.Directory :
+                                file.IsSymbolicLink ? InfoType.Link : InfoType.Other));
                         break;
                     case TransferMode.Ftp:
                         var ftpList = FtpClient.GetListing(filePath).ToList();
                         listFiles.AddRange(from file in ftpList
                             where listFolders || file.Type == FtpFileSystemObjectType.File && !file.Name.StartsWith(".")
-                            select new TransferInfo(file.Name, file.Created, file.Modified, file.Size));
+                            select new TransferInfo(file.Name, file.Created, file.Modified, file.Size,
+                                file.Type == FtpFileSystemObjectType.File ? InfoType.File :
+                                file.Type == FtpFileSystemObjectType.Directory ? InfoType.Directory : InfoType.Link));
+                        break;
+                    case TransferMode.Smb1:
+                    case TransferMode.Smb2:
+                    case TransferMode.Smb3:
+                        listFiles.AddRange(SmbClient.ListFiles(filePath, listFolders));
                         break;
                 }
             }
@@ -276,13 +306,82 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
-        ///     Download files via FTP/SFTP
+        ///     Download all files from the remote path
+        /// </summary>
+        /// <param name="doRetries"></param>
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        public TransferResult DownloadFiles(bool doRetries = false, bool overWrite = false)
+        {
+            var files = ListFiles(string.IsNullOrEmpty(TransferConfig.RemotePath)
+                ? TransferConfig.RemotePath
+                : "").FileList;
+            return DownloadFiles(files, doRetries, overWrite);
+        }
+
+        /// <summary>
+        ///     Transfer a list of files using a list of string paths
+        /// </summary>
+        /// <param name="files"></param>
+        /// <param name="doRetries"></param>
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        public TransferResult DownloadFiles(List<TransferInfo> files, bool doRetries = false,
+            bool overWrite = false)
+        {
+            var result = new TransferResult(TransferConfig.Destination, UseCert);
+
+            foreach (var file in files)
+            {
+                var retries = 0;
+                do
+                {
+                    retries++;
+                    if (retries > 1)
+                        Thread.Sleep(TransferConfig.RetryDelay);
+                    var fileResult = DownloadFile(file.FileName,
+                        string.IsNullOrEmpty(TransferConfig.RemotePath)
+                            ? TransferConfig.RemotePath
+                            : "",
+                        string.IsNullOrEmpty(TransferConfig.DestPath)
+                            ? TransferConfig.DestPath
+                            : Transfers.Config.DestPath, overWrite);
+
+                    result.Status = fileResult.Status;
+                    result.FileList.AddRange(fileResult.FileList);
+                    result.LastFile = file.FileName;
+                    result.FileSize = fileResult.FileSize;
+                } while (doRetries && result.Status != TransferStatus.Success);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Download a single file via supported transfer method
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="downloadPath"></param>
         /// <param name="destPath"></param>
+        /// <param name="overWrite"></param>
         /// <returns></returns>
-        public TransferResult DownloadFiles(string fileName, string downloadPath = null, string destPath = null)
+        [Obsolete("Use DownloadFile for a single file")]
+        public TransferResult DownloadFiles(string fileName, string downloadPath = null, string destPath = null,
+            bool overWrite = true)
+        {
+            return DownloadFile(fileName, downloadPath, destPath, overWrite);
+        }
+
+        /// <summary>
+        ///     Download a single files via supported transfer method
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="downloadPath"></param>
+        /// <param name="destPath"></param>
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        public TransferResult DownloadFile(string fileName, string downloadPath = null, string destPath = null,
+            bool overWrite = true)
         {
             var remotePath = downloadPath;
             if (string.IsNullOrEmpty(remotePath))
@@ -302,35 +401,59 @@ namespace Lurgle.Transfer.Classes
                 switch (TransferConfig.TransferMode)
                 {
                     case TransferMode.Sftp when !SftpClient.IsConnected:
-                        SftpClient.Connect();
-                        break;
                     case TransferMode.Ftp when !FtpClient.IsConnected:
-                        FtpClient.Connect();
+                    case TransferMode.Smb1 when !SmbConnected:
+                    case TransferMode.Smb2 when !SmbConnected:
+                    case TransferMode.Smb3 when !SmbConnected:
+                        Connect();
                         break;
                 }
 
                 var remoteFile = Url.Combine(remotePath, fileName);
                 var destFile = Path.Combine(filePath, fileName);
-                var transferFile = new FileStream(destFile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite,
-                    TransferConfig.BufferSize);
-
-                switch (TransferConfig.TransferMode)
+                if (overWrite | !File.Exists(destFile))
                 {
-                    case TransferMode.Sftp:
-                        var fileInfo = SftpClient.GetAttributes(remoteFile);
-                        SftpClient.DownloadFile(remoteFile, transferFile);
-                        transferResult.FileSize = fileInfo.Size;
-                        break;
-                    case TransferMode.Ftp:
-                        var fileSize = FtpClient.GetFileSize(remoteFile);
-                        FtpClient.Download(transferFile, remoteFile);
-                        transferResult.FileSize = fileSize;
-                        break;
-                }
+                    var transferFile = new FileStream(destFile, FileMode.Create, FileAccess.ReadWrite,
+                        FileShare.ReadWrite,
+                        TransferConfig.BufferSize);
 
-                transferFile.Close();
-                transferFile.Dispose();
-                transferResult.Status = TransferStatus.Success;
+                    switch (TransferConfig.TransferMode)
+                    {
+                        case TransferMode.Sftp:
+                            SftpClient.DownloadFile(remoteFile, transferFile);
+                            break;
+                        case TransferMode.Ftp:
+                            FtpClient.Download(transferFile, remoteFile);
+                            break;
+                        case TransferMode.Smb1:
+                        case TransferMode.Smb2:
+                        case TransferMode.Smb3:
+                            transferResult = SmbClient.GetFile(fileName, remotePath, transferFile);
+                            break;
+                    }
+
+                    transferFile.Close();
+                    transferFile.Dispose();
+                    if (TransferConfig.TransferMode == TransferMode.Sftp ||
+                        TransferConfig.TransferMode == TransferMode.Ftp)
+                        transferResult = new TransferResult(Destination, UseCert)
+                        {
+                            FileList = {Files.GetFileInfo(destFile)},
+                            Status = TransferStatus.Success,
+                            LastFile = fileName,
+                            FileSize = Files.GetFileInfo(destFile).Size
+                        };
+                }
+                else
+                {
+                    transferResult = new TransferResult(Destination, UseCert)
+                    {
+                        FileList = {Files.GetFileInfo(destFile)},
+                        Status = TransferStatus.FileExists,
+                        LastFile = fileName,
+                        FileSize = Files.GetFileInfo(destFile).Size
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -347,7 +470,7 @@ namespace Lurgle.Transfer.Classes
         /// <param name="doRetries"></param>
         /// <param name="overWrite"></param>
         /// <returns></returns>
-        public List<TransferResult> SendFiles(bool doRetries = false, bool overWrite = false)
+        public TransferResult SendFiles(bool doRetries = false, bool overWrite = false)
         {
             var files = Files.GetFiles(string.IsNullOrEmpty(TransferConfig.SourcePath)
                 ? Transfers.Config.SourcePath
@@ -362,7 +485,7 @@ namespace Lurgle.Transfer.Classes
         /// <param name="doRetries"></param>
         /// <param name="overWrite"></param>
         /// <returns></returns>
-        public List<TransferResult> SendFiles(IEnumerable<string> fileList, bool doRetries = false,
+        public TransferResult SendFiles(IEnumerable<string> fileList, bool doRetries = false,
             bool overWrite = false)
         {
             var files = (from file in fileList where File.Exists(file) select Files.GetFileInfo(file)).ToList();
@@ -376,25 +499,29 @@ namespace Lurgle.Transfer.Classes
         /// <param name="doRetries"></param>
         /// <param name="overWrite"></param>
         /// <returns></returns>
-        public List<TransferResult> SendFiles(List<TransferInfo> files, bool doRetries = false, bool overWrite = false)
+        public TransferResult SendFiles(List<TransferInfo> files, bool doRetries = false, bool overWrite = false)
         {
-            var results = new List<TransferResult>();
+            var result = new TransferResult(TransferConfig.Destination, UseCert);
             foreach (var file in files)
             {
-                TransferResult result;
                 var retries = 0;
+                TransferResult fileResult;
+
                 do
                 {
                     retries++;
                     if (retries > 1)
                         Thread.Sleep(TransferConfig.RetryDelay);
-                    result = SendFiles(file.FileName, file.FileName, overWrite);
+                    fileResult = SendFiles(file.FileName, file.FileName, overWrite);
                 } while (doRetries && result.Status != TransferStatus.Success);
 
-                results.Add(result);
+                result.Status = fileResult.Status;
+                result.FileList.AddRange(fileResult.FileList);
+                result.LastFile = file.FileName;
+                result.FileSize = fileResult.FileSize;
             }
 
-            return results;
+            return result;
         }
 
         /// <summary>
@@ -411,6 +538,7 @@ namespace Lurgle.Transfer.Classes
                 filePath = !string.IsNullOrEmpty(TransferConfig.SourcePath)
                     ? Path.Combine(TransferConfig.SourcePath, destFile)
                     : Path.Combine(Transfers.Config.SourcePath, destFile);
+
             var transferResult = new TransferResult(Destination, UseCert) {Status = TransferStatus.Success};
             var exists = false;
 
@@ -419,10 +547,11 @@ namespace Lurgle.Transfer.Classes
                 switch (TransferConfig.TransferMode)
                 {
                     case TransferMode.Sftp when !SftpClient.IsConnected:
-                        SftpClient.Connect();
-                        break;
                     case TransferMode.Ftp when !FtpClient.IsConnected:
-                        FtpClient.Connect();
+                    case TransferMode.Smb1 when !SmbConnected:
+                    case TransferMode.Smb2 when !SmbConnected:
+                    case TransferMode.Smb3 when !SmbConnected:
+                        Connect();
                         break;
                 }
 
@@ -438,7 +567,11 @@ namespace Lurgle.Transfer.Classes
                         if (overWrite || !exists)
                             SftpClient.UploadFile(transferFile, transferPath, overWrite);
                         var fileInfo = SftpClient.GetAttributes(transferPath);
+                        transferResult.LastFile = Path.GetFileName(destFile);
                         transferResult.FileSize = fileInfo.Size;
+                        transferResult.FileList.Add(new TransferInfo(Path.GetFileName(destFile),
+                            fileInfo.LastAccessTime,
+                            fileInfo.LastWriteTime, fileInfo.Size, InfoType.File));
                         break;
                     case TransferMode.Ftp:
                         //Skip doesn't actually work as expected - it deletes the file, so we'll check before upload
@@ -447,13 +580,24 @@ namespace Lurgle.Transfer.Classes
                             FtpClient.Upload(transferFile, transferPath,
                                 overWrite ? FtpRemoteExists.Skip : FtpRemoteExists.Overwrite, true);
 
+                        var remoteList = ListFiles(TransferConfig.RemotePath, false).FileList.Where(file =>
+                            file.FileName.Equals(Path.GetFileName(destFile), StringComparison.OrdinalIgnoreCase));
+                        transferResult.LastFile = Path.GetFileName(destFile);
                         transferResult.FileSize = FtpClient.GetFileSize(transferPath);
+                        transferResult.FileList.AddRange(remoteList);
+                        break;
+                    case TransferMode.Smb1:
+                    case TransferMode.Smb2:
+                    case TransferMode.Smb3:
+                        transferResult = SmbClient.SendFile(Path.GetFileName(destFile), transferFile,
+                            TransferConfig.RemotePath, overWrite);
                         break;
                 }
 
                 transferFile.Close();
                 transferFile.Dispose();
-                if (!overWrite && exists)
+                if ((TransferConfig.TransferMode == TransferMode.Sftp ||
+                     TransferConfig.TransferMode == TransferMode.Ftp) && !overWrite && exists)
                     transferResult.Status = TransferStatus.FileExists;
                 else
                     transferResult.Status = TransferStatus.Success;

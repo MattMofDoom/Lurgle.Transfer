@@ -24,6 +24,7 @@ namespace Lurgle.Transfer.Classes
         {
             Destination = destination;
             Status = TransferStatus.Unknown;
+            LastFile = string.Empty;
             FileSize = 0;
             UseCert = isCert;
             Destination = destination;
@@ -32,9 +33,14 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
-        ///     SFTP Status
+        ///     Overall transfer Status
         /// </summary>
         public TransferStatus Status { get; set; }
+
+        /// <summary>
+        ///     Last file transferred
+        /// </summary>
+        public string LastFile { get; set; }
 
         /// <summary>
         ///     Remote File Size
