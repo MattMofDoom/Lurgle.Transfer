@@ -65,7 +65,7 @@ namespace Lurgle.Transfer.Classes
             {
                 NTStatus status;
                 if (_fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1)
-                    status = Smb1Client.Login(GetDomain(_fileTransfer.TransferConfig.UserName), 
+                    status = Smb1Client.Login(GetDomain(_fileTransfer.TransferConfig.UserName),
                         GetUserName(_fileTransfer.TransferConfig.UserName),
                         _fileTransfer.TransferConfig.Password);
                 else
@@ -156,7 +156,7 @@ namespace Lurgle.Transfer.Classes
 
             CheckStatus(fileStore.GetFileInformation(out var fileAttributes, fileHandle,
                 FileInformationClass.FileStandardInformation));
-            
+
             var size = ((FileStandardInformation) fileAttributes).EndOfFile;
 
             CheckStatus(fileStore.GetFileInformation(out fileAttributes, fileHandle,
@@ -181,10 +181,10 @@ namespace Lurgle.Transfer.Classes
 
             do
             {
-                CheckStatus(fileStore.ReadFile(out data, fileHandle, bytesRead,
+                status = fileStore.ReadFile(out data, fileHandle, bytesRead,
                     _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
                         ? (int) Smb1Client.MaxReadSize
-                        : (int) Smb2Client.MaxReadSize));
+                        : (int) Smb2Client.MaxReadSize);
 
                 if (status == NTStatus.STATUS_END_OF_FILE || data.Length == 0) continue;
                 bytesRead += data.Length;
@@ -250,7 +250,7 @@ namespace Lurgle.Transfer.Classes
             var maxWrite = _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
                 ? (int) Smb1Client.MaxWriteSize
                 : (int) Smb2Client.MaxWriteSize;
-            
+
             do
             {
                 var data = new byte[maxWrite];
