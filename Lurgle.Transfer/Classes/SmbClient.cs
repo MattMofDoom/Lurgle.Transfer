@@ -87,12 +87,12 @@ namespace Lurgle.Transfer.Classes
         {
             if (_fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1)
             {
-                Smb1Client.Logoff();
+                CheckStatus(Smb1Client.Logoff());
                 Smb1Client.Disconnect();
             }
             else
             {
-                Smb2Client.Logoff();
+                CheckStatus(Smb2Client.Logoff());
                 Smb2Client.Disconnect();
             }
 
@@ -149,22 +149,18 @@ namespace Lurgle.Transfer.Classes
             CheckStatus(status);
 
             var remoteFile = Path.Combine(GetFolder(remotePath), fileName);
-            status = fileStore.CreateFile(out var fileHandle, out _, remoteFile,
+            CheckStatus(fileStore.CreateFile(out var fileHandle, out _, remoteFile,
                 AccessMask.GENERIC_READ | AccessMask.SYNCHRONIZE, FileAttributes.Normal, ShareAccess.Read,
                 CreateDisposition.FILE_OPEN,
-                CreateOptions.FILE_NON_DIRECTORY_FILE | CreateOptions.FILE_SYNCHRONOUS_IO_ALERT, null);
+                CreateOptions.FILE_NON_DIRECTORY_FILE | CreateOptions.FILE_SYNCHRONOUS_IO_ALERT, null));
 
-            CheckStatus(status);
-
-            status = fileStore.GetFileInformation(out var fileAttributes, fileHandle,
-                FileInformationClass.FileStandardInformation);
-            CheckStatus(status);
-
+            CheckStatus(fileStore.GetFileInformation(out var fileAttributes, fileHandle,
+                FileInformationClass.FileStandardInformation));
+            
             var size = ((FileStandardInformation) fileAttributes).EndOfFile;
 
-            status = fileStore.GetFileInformation(out fileAttributes, fileHandle,
-                FileInformationClass.FileBasicInformation);
-            CheckStatus(status);
+            CheckStatus(fileStore.GetFileInformation(out fileAttributes, fileHandle,
+                FileInformationClass.FileBasicInformation));
 
             var accessTime = ((FileBasicInformation) fileAttributes).LastAccessTime.Time;
             var modifyTime = ((FileBasicInformation) fileAttributes).ChangeTime.Time;
@@ -185,20 +181,18 @@ namespace Lurgle.Transfer.Classes
 
             do
             {
-                status = fileStore.ReadFile(out data, fileHandle, bytesRead,
+                CheckStatus(fileStore.ReadFile(out data, fileHandle, bytesRead,
                     _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
                         ? (int) Smb1Client.MaxReadSize
-                        : (int) Smb2Client.MaxReadSize);
-                CheckStatus(status);
+                        : (int) Smb2Client.MaxReadSize));
+
                 if (status == NTStatus.STATUS_END_OF_FILE || data.Length == 0) continue;
                 bytesRead += data.Length;
                 transferFile.Write(data, 0, data.Length);
             } while (status != NTStatus.STATUS_END_OF_FILE && data.Length != 0);
 
-            status = fileStore.CloseFile(fileHandle);
-            CheckStatus(status);
-            status = fileStore.Disconnect();
-            CheckStatus(status);
+            CheckStatus(fileStore.CloseFile(fileHandle));
+            CheckStatus(fileStore.Disconnect());
 
             var transferResult = new TransferResult(_fileTransfer.Destination, false)
             {
@@ -247,17 +241,16 @@ namespace Lurgle.Transfer.Classes
                 };
 
 
-            status = fileStore.CreateFile(out var fileHandle, out _, remoteFile,
+            CheckStatus(fileStore.CreateFile(out var fileHandle, out _, remoteFile,
                 AccessMask.GENERIC_WRITE | AccessMask.SYNCHRONIZE, FileAttributes.Normal, ShareAccess.None,
                 CreateDisposition.FILE_CREATE,
-                CreateOptions.FILE_NON_DIRECTORY_FILE | CreateOptions.FILE_SYNCHRONOUS_IO_ALERT, null);
-
-            CheckStatus(status);
+                CreateOptions.FILE_NON_DIRECTORY_FILE | CreateOptions.FILE_SYNCHRONOUS_IO_ALERT, null));
 
             long writeOffset = 0;
             var maxWrite = _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
                 ? (int) Smb1Client.MaxWriteSize
                 : (int) Smb2Client.MaxWriteSize;
+            
             do
             {
                 var data = new byte[maxWrite];
@@ -265,29 +258,23 @@ namespace Lurgle.Transfer.Classes
                 if (bytesRead < maxWrite)
                     Array.Resize(ref data, bytesRead);
 
-                status = fileStore.WriteFile(out _, fileHandle, writeOffset, data);
-                CheckStatus(status);
+                CheckStatus(fileStore.WriteFile(out _, fileHandle, writeOffset, data));
                 writeOffset += bytesRead;
             } while (transferFile.Position < transferFile.Length);
 
-            status = fileStore.CloseFile(fileHandle);
-            CheckStatus(status);
+            CheckStatus(fileStore.CloseFile(fileHandle));
 
-            status = fileStore.CreateFile(out fileHandle, out _, remoteFile,
+            CheckStatus(fileStore.CreateFile(out fileHandle, out _, remoteFile,
                 AccessMask.GENERIC_READ | AccessMask.SYNCHRONIZE, FileAttributes.Normal, ShareAccess.Read,
                 CreateDisposition.FILE_OPEN,
-                CreateOptions.FILE_NON_DIRECTORY_FILE | CreateOptions.FILE_SYNCHRONOUS_IO_ALERT, null);
-            CheckStatus(status);
+                CreateOptions.FILE_NON_DIRECTORY_FILE | CreateOptions.FILE_SYNCHRONOUS_IO_ALERT, null));
 
-            status = fileStore.GetFileInformation(out var fileAttributes, fileHandle,
-                FileInformationClass.FileBasicInformation);
-            CheckStatus(status);
+            CheckStatus(fileStore.GetFileInformation(out var fileAttributes, fileHandle,
+                FileInformationClass.FileBasicInformation));
 
-            status = fileStore.CloseFile(fileHandle);
-            CheckStatus(status);
+            CheckStatus(fileStore.CloseFile(fileHandle));
 
-            status = fileStore.Disconnect();
-            CheckStatus(status);
+            CheckStatus(fileStore.Disconnect());
 
             var accessTime = ((FileBasicInformation) fileAttributes).LastAccessTime.Time;
             var modifyTime = ((FileBasicInformation) fileAttributes).ChangeTime.Time;
