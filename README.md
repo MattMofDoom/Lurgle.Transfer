@@ -4,7 +4,7 @@
 [![Downloads](https://img.shields.io/nuget/dt/Lurgle.Transfer?style=plastic)](https://www.nuget.org/packages/Lurgle.Transfer)
 [![License](https://img.shields.io/github/license/MattMofDoom/Lurgle.Transfer?style=plastic)](https://github.com/MattMofDoom/Lurgle.Transfer/blob/dev/LICENSE)
 
-Lurgle.Transfer is an implementation of SSH.NET and FluentFTP that accelerates getting your project up and running with file transfers. It includes added features such as GZIP/ZIP compression, and file archival.
+Lurgle.Transfer is an implementation of SSH.NET, FluentFTP, and SMBLibrary that accelerates getting your project up and running with file transfers. It includes added features such as GZIP/ZIP compression, and file archival.
 
 The net effect is a predictable file transfer implementation that can be integrated into your project and used to inform logging and alerting.
 
