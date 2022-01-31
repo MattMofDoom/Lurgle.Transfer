@@ -243,7 +243,7 @@ namespace Lurgle.Transfer.Classes
 
             CheckStatus(fileStore.CreateFile(out var fileHandle, out _, remoteFile,
                 AccessMask.GENERIC_WRITE | AccessMask.SYNCHRONIZE, FileAttributes.Normal, ShareAccess.None,
-                CreateDisposition.FILE_CREATE,
+                overWrite ? CreateDisposition.FILE_OVERWRITE_IF : CreateDisposition.FILE_CREATE,
                 CreateOptions.FILE_NON_DIRECTORY_FILE | CreateOptions.FILE_SYNCHRONOUS_IO_ALERT, null));
 
             long writeOffset = 0;

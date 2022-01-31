@@ -14,7 +14,7 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle FTP SFTP SSH SMB CIFS SSH.NET FluentFTP SMBLibrary File Transfer compression compressed uncompressed gzip zip</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.2.2</Version>
+    <Version>1.2.3</Version>
     <PackageReleaseNotes>
       * Add SMB1 and SMB2/3 transfers
       * Add download of multiple files
