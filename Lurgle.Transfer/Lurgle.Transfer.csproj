@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net47;net48;net5.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <Authors>Matt Marlor</Authors>
-    <Description>File transfer library that accelerates getting projects up and running with SSH.NET and FluentFTP!</Description>
+    <Description>File transfer library that accelerates getting projects up and running with SSH.NET, FluentFTP, and SMBLibrary!</Description>
     <Copyright>Matt Marlor</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/MattMofDoom/Lurgle.Transfer</PackageProjectUrl>
