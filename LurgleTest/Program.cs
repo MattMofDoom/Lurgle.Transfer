@@ -90,7 +90,7 @@ namespace LurgleTest
                                     }
 
                                     transferResult =
-                                        transfer.DownloadFiles(file.FileName, transfer.TransferConfig.RemotePath,
+                                        transfer.DownloadFile(file.FileName, transfer.TransferConfig.RemotePath,
                                             transfer.TransferConfig.DestPath);
 
                                     Console.WriteLine("Download Result: File {0}, Result {1} {2}", file.FileName,

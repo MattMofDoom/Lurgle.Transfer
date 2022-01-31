@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net47;net48;net5.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <Authors>Matt Marlor</Authors>
-    <Description>File transfer library that accelerates getting projects up and running with SSH.NET and FluentFTP!</Description>
+    <Description>File transfer library that accelerates getting projects up and running with SSH.NET, FluentFTP, and SMBLibrary!</Description>
     <Copyright>Matt Marlor</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/MattMofDoom/Lurgle.Transfer</PackageProjectUrl>
@@ -12,9 +12,9 @@
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/MattMofDoom/Lurgle.Transfer</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageTags>Lurgle FTP SFTP SSH SSH.NET FluentFTP File Transfer compression compressed uncompressed gzip zip</PackageTags>
+    <PackageTags>Lurgle FTP SFTP SSH SMB CIFS SSH.NET FluentFTP SMBLibrary File Transfer compression compressed uncompressed gzip zip</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <PackageReleaseNotes>
       * Add SMB1 and SMB2/3 transfers
       * Add download of multiple files

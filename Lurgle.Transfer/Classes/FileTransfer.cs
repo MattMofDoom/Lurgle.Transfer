@@ -11,6 +11,7 @@ using FluentFTP.Proxy;
 using Flurl;
 using Lurgle.Transfer.Enums;
 using Renci.SshNet;
+// ReSharper disable ClassNeverInstantiated.Global
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
