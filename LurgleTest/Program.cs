@@ -56,7 +56,9 @@ namespace LurgleTest
                                 Thread.Sleep(transfer.TransferConfig.RetryDelay);
                             }
 
-                            transferResult = transfer.ListFiles();
+                            transferResult = transfer.ListFiles(listFolders: false);
+                            if (transferResult.Status != TransferStatus.Success)
+                                Console.WriteLine(transferResult.ErrorDetails);
                         } while (transferResult.Status != TransferStatus.Success &&
                                  retries < transfer.TransferConfig.RetryCount);
 
@@ -68,7 +70,8 @@ namespace LurgleTest
                             foreach (var file in fileList)
                             {
                                 fileCount++;
-                                Console.WriteLine("{0}: {1}", fileCount, file.FileName);
+                                Console.WriteLine("{0}: {1} ({2}) - {3:N0} Bytes", fileCount, file.FileName, file.Type,
+                                    file.Size);
                             }
 
                             Console.WriteLine();

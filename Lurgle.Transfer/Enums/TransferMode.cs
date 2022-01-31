@@ -15,6 +15,21 @@ namespace Lurgle.Transfer.Enums
         /// <summary>
         ///     FTP
         /// </summary>
-        Ftp
+        Ftp,
+
+        /// <summary>
+        ///     SMB v1 (Windows 2003)
+        /// </summary>
+        Smb1,
+
+        /// <summary>
+        ///     SMB v2 (Windows 2008+)
+        /// </summary>
+        Smb2,
+
+        /// <summary>
+        ///     SMB v3 - functionally no different to SMB v2, provided for reference or future use
+        /// </summary>
+        Smb3
     }
 }

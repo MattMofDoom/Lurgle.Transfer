@@ -96,13 +96,41 @@
             <param name="listFolders"></param>
             <returns></returns>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadFiles(System.String,System.String,System.String)">
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadFiles(System.Boolean,System.Boolean)">
             <summary>
-                Download files via FTP/SFTP
+                Download all files from the remote path
+            </summary>
+            <param name="doRetries"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadFiles(System.Collections.Generic.List{Lurgle.Transfer.Classes.TransferInfo},System.Boolean,System.Boolean)">
+            <summary>
+                Transfer a list of files using a list of string paths
+            </summary>
+            <param name="files"></param>
+            <param name="doRetries"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadFiles(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Download a single file via supported transfer method
             </summary>
             <param name="fileName"></param>
             <param name="downloadPath"></param>
             <param name="destPath"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.DownloadFile(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Download a single files via supported transfer method
+            </summary>
+            <param name="fileName"></param>
+            <param name="downloadPath"></param>
+            <param name="destPath"></param>
+            <param name="overWrite"></param>
             <returns></returns>
         </member>
         <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.Boolean,System.Boolean)">
@@ -139,6 +167,84 @@
             <param name="localPath"></param>
             <param name="overWrite"></param>
             <returns></returns>
+        </member>
+        <member name="T:Lurgle.Transfer.Classes.SmbClient">
+            <summary>
+                SMB client for file transfers
+            </summary>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.#ctor(Lurgle.Transfer.Classes.FileTransfer)">
+            <summary>
+                SmbClient constructor
+            </summary>
+            <param name="fileTransfer"></param>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.Connect">
+            <summary>
+                Connect to remote server
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.Disconnect">
+            <summary>
+                Disconnect from remote server
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.ListFiles(System.String,System.Boolean)">
+            <summary>
+                Retrieve a list of files from remote server
+            </summary>
+            <param name="filePath"></param>
+            <param name="listFolders"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.GetFile(System.String,System.String,System.IO.Stream)">
+            <summary>
+                Download a file from remote server
+            </summary>
+            <param name="fileName"></param>
+            <param name="remotePath"></param>
+            <param name="transferFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.SendFile(System.String,System.IO.Stream,System.String,System.Boolean)">
+            <summary>
+                Upload a file to remote server
+            </summary>
+            <param name="fileName"></param>
+            <param name="transferFile"></param>
+            <param name="remotePath"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.GetDomain(System.String)">
+            <summary>
+                Return the domain name portion of DOMAIN\userName or userName@domain
+            </summary>
+            <param name="userName">DOMAIN\userName or userName@domain</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.GetUserName(System.String)">
+            <summary>
+                Return the user name portion of DOMAIN\userName
+            </summary>
+            <param name="userName">DOMAIN\userName</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.GetUserNameFromUpn(System.String)">
+            <summary>
+                Returns the user name portion of username@domain
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.SmbClient.ToHResult(SMBLibrary.NTStatus)">
+            <summary>
+                Converts an NTStatus to an HRESULT.
+            </summary>
+            <param name="status">The <see cref="T:SMBLibrary.NTStatus" /> to convert.</param>
+            <returns>The HRESULT.</returns>
         </member>
         <member name="T:Lurgle.Transfer.Classes.TransferConfig">
             <summary>
@@ -532,7 +638,7 @@
                 File attributes
             </summary>
         </member>
-        <member name="M:Lurgle.Transfer.Classes.TransferInfo.#ctor(System.String,System.DateTime,System.DateTime,System.Int64)">
+        <member name="M:Lurgle.Transfer.Classes.TransferInfo.#ctor(System.String,System.DateTime,System.DateTime,System.Int64,System.Nullable{Lurgle.Transfer.Enums.InfoType})">
             <summary>
                 File attributes
             </summary>
@@ -540,6 +646,7 @@
             <param name="accessDate"></param>
             <param name="modifyDate"></param>
             <param name="fileSize"></param>
+            <param name="fileType"></param>
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferInfo.FileName">
             <summary>
@@ -566,6 +673,11 @@
                 File size
             </summary>
         </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferInfo.Type">
+            <summary>
+                File type (file, directory, link, other)
+            </summary>
+        </member>
         <member name="T:Lurgle.Transfer.Classes.TransferResult">
             <summary>
                 SFTP Result
@@ -580,7 +692,12 @@
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferResult.Status">
             <summary>
-                SFTP Status
+                Overall transfer Status
+            </summary>
+        </member>
+        <member name="P:Lurgle.Transfer.Classes.TransferResult.LastFile">
+            <summary>
+                Last file transferred
             </summary>
         </member>
         <member name="P:Lurgle.Transfer.Classes.TransferResult.FileSize">
@@ -868,6 +985,31 @@
                 Error creating folder
             </summary>
         </member>
+        <member name="T:Lurgle.Transfer.Enums.InfoType">
+            <summary>
+                Entry type for file listings
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.InfoType.File">
+            <summary>
+                File
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.InfoType.Directory">
+            <summary>
+                Directory
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.InfoType.Link">
+            <summary>
+                Link
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.InfoType.Other">
+            <summary>
+                Other type of entry
+            </summary>
+        </member>
         <member name="T:Lurgle.Transfer.Enums.TransferAuth">
             <summary>
                 SFTP authentication types
@@ -901,6 +1043,21 @@
         <member name="F:Lurgle.Transfer.Enums.TransferMode.Ftp">
             <summary>
                 FTP
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.TransferMode.Smb1">
+            <summary>
+                SMB v1 (Windows 2003)
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.TransferMode.Smb2">
+            <summary>
+                SMB v2 (Windows 2008+)
+            </summary>
+        </member>
+        <member name="F:Lurgle.Transfer.Enums.TransferMode.Smb3">
+            <summary>
+                SMB v3 - functionally no different to SMB v2, provided for reference or future use
             </summary>
         </member>
         <member name="T:Lurgle.Transfer.Enums.TransferStatus">
