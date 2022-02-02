@@ -119,7 +119,7 @@ namespace LurgleTest
                                     Thread.Sleep(transfer.TransferConfig.RetryDelay);
                                 }
 
-                                transferResult = transfer.SendFiles(Path.GetFileName(file.FileName), file.FileName);
+                                transferResult = transfer.SendFile(Path.GetFileName(file.FileName), file.FileName);
 
                                 Console.WriteLine("Send Result: File {0}, Result {1} {2}", file.FileName,
                                     transferResult.Status,

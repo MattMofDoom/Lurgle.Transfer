@@ -39,23 +39,23 @@ namespace Lurgle.Transfer.Classes
             if (IPAddress.TryParse(_fileTransfer.TransferConfig.Server, out var address))
                 connect = _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
                     ? Smb1Client.Connect(address,
-                        _fileTransfer.TransferConfig.Port == 445
-                            ? SMBTransportType.DirectTCPTransport
-                            : SMBTransportType.NetBiosOverTCP)
+                        _fileTransfer.TransferConfig.Port == 135
+                            ? SMBTransportType.NetBiosOverTCP
+                            : SMBTransportType.DirectTCPTransport)
                     : Smb2Client.Connect(address,
-                        _fileTransfer.TransferConfig.Port == 445
-                            ? SMBTransportType.DirectTCPTransport
-                            : SMBTransportType.NetBiosOverTCP);
+                        _fileTransfer.TransferConfig.Port == 135
+                            ? SMBTransportType.NetBiosOverTCP
+                            : SMBTransportType.DirectTCPTransport);
             else
                 connect = _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
                     ? Smb1Client.Connect(_fileTransfer.TransferConfig.Server,
-                        _fileTransfer.TransferConfig.Port == 445
-                            ? SMBTransportType.DirectTCPTransport
-                            : SMBTransportType.NetBiosOverTCP)
+                        _fileTransfer.TransferConfig.Port == 135
+                            ? SMBTransportType.NetBiosOverTCP
+                            : SMBTransportType.DirectTCPTransport)
                     : Smb2Client.Connect(_fileTransfer.TransferConfig.Server,
-                        _fileTransfer.TransferConfig.Port == 445
-                            ? SMBTransportType.DirectTCPTransport
-                            : SMBTransportType.NetBiosOverTCP);
+                        _fileTransfer.TransferConfig.Port == 135
+                            ? SMBTransportType.NetBiosOverTCP
+                            : SMBTransportType.DirectTCPTransport);
 
             if (!connect)
             {

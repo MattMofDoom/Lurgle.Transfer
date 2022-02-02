@@ -161,6 +161,15 @@
         </member>
         <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFiles(System.String,System.String,System.Boolean)">
             <summary>
+            Send a single file via supported transfer method
+            </summary>
+            <param name="destFile"></param>
+            <param name="localPath"></param>
+            <param name="overWrite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lurgle.Transfer.Classes.FileTransfer.SendFile(System.String,System.String,System.Boolean)">
+            <summary>
                 Send file via FTP/SFTP
             </summary>
             <param name="destFile"></param>

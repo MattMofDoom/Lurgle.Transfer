@@ -513,7 +513,7 @@ namespace Lurgle.Transfer.Classes
                     retries++;
                     if (retries > 1)
                         Thread.Sleep(TransferConfig.RetryDelay);
-                    fileResult = SendFiles(file.FileName, file.FileName, overWrite);
+                    fileResult = SendFile(file.FileName, file.FileName, overWrite);
                 } while (doRetries && result.Status != TransferStatus.Success);
 
                 result.Status = fileResult.Status;
@@ -526,13 +526,26 @@ namespace Lurgle.Transfer.Classes
         }
 
         /// <summary>
+        /// Send a single file via supported transfer method
+        /// </summary>
+        /// <param name="destFile"></param>
+        /// <param name="localPath"></param>
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        [Obsolete("Use SendFile for a single file")]
+        public TransferResult SendFiles(string destFile, string localPath = null, bool overWrite = false)
+        {
+            return SendFile(destFile, localPath, overWrite);
+        }
+
+        /// <summary>
         ///     Send file via FTP/SFTP
         /// </summary>
         /// <param name="destFile"></param>
         /// <param name="localPath"></param>
         /// <param name="overWrite"></param>
         /// <returns></returns>
-        public TransferResult SendFiles(string destFile, string localPath = null, bool overWrite = false)
+        public TransferResult SendFile(string destFile, string localPath = null, bool overWrite = false)
         {
             var filePath = localPath;
             if (string.IsNullOrEmpty(filePath))
