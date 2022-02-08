@@ -14,7 +14,7 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle FTP SFTP SSH SMB CIFS SSH.NET FluentFTP SMBLibrary File Transfer compression compressed uncompressed gzip zip</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.2.4</Version>
+    <Version>1.2.5</Version>
     <PackageReleaseNotes>
       * Add SMB1 and SMB2/3 transfers
       * Add download of multiple files
@@ -22,6 +22,7 @@
       * Add Type field to TransferInfo for file type
       * Add InfoType enum for TransferInfo.Type
       * Amend UploadFiles to UploadFile
+      * Update FluentFTP
 </PackageReleaseNotes>
     <Product>Lurgle.Transfer</Product>
     <PackageId>Lurgle.Transfer</PackageId>
@@ -34,7 +35,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentFTP" Version="36.1.0" />
+    <PackageReference Include="FluentFTP" Version="37.0.0" />
     <PackageReference Include="Flurl" Version="3.0.4" />
     <PackageReference Include="SMBLibrary" Version="1.4.8" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
