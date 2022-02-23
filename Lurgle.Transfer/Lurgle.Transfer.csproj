@@ -36,7 +36,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentFTP" Version="37.0.0" />
+    <PackageReference Include="FluentFTP" Version="37.0.1" />
     <PackageReference Include="SMBLibrary" Version="1.4.8" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
   </ItemGroup>
