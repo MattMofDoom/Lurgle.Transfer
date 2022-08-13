@@ -84,15 +84,15 @@ namespace Lurgle.Transfer.Classes
                 case TransferMode.Ftp:
                     if (TransferConfig.UseProxy && !string.IsNullOrEmpty(TransferConfig.ProxyServer))
                     {
-                        var proxy = new ProxyInfo
+                        var proxy = new FtpProxyProfile
                         {
-                            Host = TransferConfig.ProxyServer,
-                            Port = TransferConfig.ProxyPort
+                            ProxyHost = TransferConfig.ProxyServer,
+                            ProxyPort = TransferConfig.ProxyPort
                         };
 
                         if (!string.IsNullOrEmpty(TransferConfig.ProxyUser) &&
                             !string.IsNullOrEmpty(TransferConfig.ProxyPassword))
-                            proxy.Credentials =
+                            proxy.ProxyCredentials =
                                 new NetworkCredential(TransferConfig.ProxyUser, TransferConfig.ProxyPassword);
 
                         FtpClient = new FtpClientHttp11Proxy(proxy);
@@ -283,10 +283,10 @@ namespace Lurgle.Transfer.Classes
                     case TransferMode.Ftp:
                         var ftpList = FtpClient.GetListing(filePath).ToList();
                         listFiles.AddRange(from file in ftpList
-                            where listFolders || file.Type == FtpFileSystemObjectType.File && !file.Name.StartsWith(".")
+                            where listFolders || file.Type == FtpObjectType.File && !file.Name.StartsWith(".")
                             select new TransferInfo(file.Name, file.Created, file.Modified, file.Size,
-                                file.Type == FtpFileSystemObjectType.File ? InfoType.File :
-                                file.Type == FtpFileSystemObjectType.Directory ? InfoType.Directory : InfoType.Link));
+                                file.Type == FtpObjectType.File ? InfoType.File :
+                                file.Type == FtpObjectType.Directory ? InfoType.Directory : InfoType.Link));
                         break;
                     case TransferMode.Smb1:
                     case TransferMode.Smb2:
@@ -424,7 +424,7 @@ namespace Lurgle.Transfer.Classes
                             SftpClient.DownloadFile(remoteFile, transferFile);
                             break;
                         case TransferMode.Ftp:
-                            FtpClient.Download(transferFile, remoteFile);
+                            FtpClient.DownloadStream(transferFile, remoteFile);
                             break;
                         case TransferMode.Smb1:
                         case TransferMode.Smb2:
@@ -591,7 +591,7 @@ namespace Lurgle.Transfer.Classes
                         //Skip doesn't actually work as expected - it deletes the file, so we'll check before upload
                         exists = FtpClient.FileExists(transferPath);
                         if (overWrite || !exists)
-                            FtpClient.Upload(transferFile, transferPath,
+                            FtpClient.UploadStream(transferFile, transferPath,
                                 overWrite ? FtpRemoteExists.Skip : FtpRemoteExists.Overwrite, true);
 
                         var remoteList = ListFiles(TransferConfig.RemotePath, false).FileList.Where(file =>
