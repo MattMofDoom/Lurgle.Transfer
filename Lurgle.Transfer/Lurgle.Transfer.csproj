@@ -14,7 +14,7 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Lurgle FTP SFTP SSH SMB CIFS SSH.NET FluentFTP SMBLibrary File Transfer compression compressed uncompressed gzip zip</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.2.8</Version>
+    <Version>1.2.9</Version>
     <PackageReleaseNotes>
       * Add SMB1 and SMB2/3 transfers
       * Add download of multiple files
@@ -28,6 +28,7 @@
       * Update SSH.NET to address dependabot alert
       * Update Flurl
       * Update FluentFtp
+      * Update dependencies
 </PackageReleaseNotes>
     <Product>Lurgle.Transfer</Product>
     <PackageId>Lurgle.Transfer</PackageId>
@@ -40,8 +41,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentFTP" Version="39.2.1" />
-    <PackageReference Include="SMBLibrary" Version="1.4.8" />
+    <PackageReference Include="FluentFTP" Version="46.0.2" />
+    <PackageReference Include="SMBLibrary" Version="1.5.0" />
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
   </ItemGroup>
 
@@ -58,16 +59,28 @@
   <ItemGroup Condition="'$(TargetFramework)' != 'net45'">
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
-    <PackageReference Include="Flurl" Version="3.0.6" />
+    <PackageReference Include="Flurl" Version="3.0.7" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp2.1' and '$(TargetFramework)' != 'net45'">
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.1' and '$(TargetFramework)' != 'net45' and '$(TargetFramework)' != 'net461' and '$(TargetFramework)' != 'net5.0'">
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>6.0.1</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="System.Configuration.ConfigurationManager">
       <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>6.0.1</Version>
     </PackageReference>
   </ItemGroup>
 

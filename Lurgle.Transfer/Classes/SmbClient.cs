@@ -108,9 +108,8 @@ namespace Lurgle.Transfer.Classes
         public IEnumerable<TransferInfo> ListFiles(string filePath, bool listFolders)
         {
             var listFiles = new List<TransferInfo>();
-            NTStatus status;
             var fileStore = _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
-                ? Smb1Client.TreeConnect(GetShare(filePath), out status)
+                ? Smb1Client.TreeConnect(GetShare(filePath), out var status)
                 : Smb2Client.TreeConnect(GetShare(filePath), out status);
             CheckStatus(status);
 
@@ -142,9 +141,8 @@ namespace Lurgle.Transfer.Classes
         /// <returns></returns>
         public TransferResult GetFile(string fileName, string remotePath, Stream transferFile)
         {
-            NTStatus status;
             var fileStore = _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
-                ? Smb1Client.TreeConnect(GetShare(remotePath), out status)
+                ? Smb1Client.TreeConnect(GetShare(remotePath), out var status)
                 : Smb2Client.TreeConnect(GetShare(remotePath), out status);
             CheckStatus(status);
 
@@ -218,9 +216,8 @@ namespace Lurgle.Transfer.Classes
         /// <returns></returns>
         public TransferResult SendFile(string fileName, Stream transferFile, string remotePath, bool overWrite)
         {
-            NTStatus status;
             var fileStore = _fileTransfer.TransferConfig.TransferMode == TransferMode.Smb1
-                ? Smb1Client.TreeConnect(GetShare(remotePath), out status)
+                ? Smb1Client.TreeConnect(GetShare(remotePath), out var status)
                 : Smb2Client.TreeConnect(GetShare(remotePath), out status);
             CheckStatus(status);
 

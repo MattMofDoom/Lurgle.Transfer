@@ -7,7 +7,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using FluentFTP;
-using FluentFTP.Proxy;
+using FluentFTP.Proxy.SyncProxy;
 using Flurl;
 using Lurgle.Transfer.Enums;
 using Renci.SshNet;
@@ -109,27 +109,27 @@ namespace Lurgle.Transfer.Classes
                         TransferConfig.AuthMode.Equals(TransferAuth.Both))
                         FtpClient.Credentials = new NetworkCredential(TransferConfig.UserName, TransferConfig.Password);
 
-                    FtpClient.DataConnectionType =
+                    FtpClient.Config.DataConnectionType =
                         TransferConfig.UsePassive ? FtpDataConnectionType.PASV : FtpDataConnectionType.PORT;
 
-                    FtpClient.TransferChunkSize = TransferConfig.BufferSize;
-                    FtpClient.SocketKeepAlive = true;
-                    FtpClient.SocketPollInterval = 15000;
+                    FtpClient.Config.TransferChunkSize = TransferConfig.BufferSize;
+                    FtpClient.Config.SocketKeepAlive = true;
+                    FtpClient.Config.SocketPollInterval = 15000;
 
                     if ((TransferConfig.AuthMode.Equals(TransferAuth.Certificate) ||
                          TransferConfig.AuthMode.Equals(TransferAuth.Both)) && File.Exists(TransferConfig.CertPath))
                     {
                         UseCert = true;
-                        FtpClient.SslProtocols = SslProtocols.Tls11 | SslProtocols.Tls12;
-                        FtpClient.EncryptionMode = FtpEncryptionMode.Explicit;
-                        FtpClient.ClientCertificates.Add(new X509Certificate(TransferConfig.CertPath));
-                        FtpClient.DataConnectionEncryption = true;
+                        FtpClient.Config.SslProtocols = SslProtocols.Tls11 | SslProtocols.Tls12;
+                        FtpClient.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+                        FtpClient.Config.ClientCertificates.Add(new X509Certificate(TransferConfig.CertPath));
+                        FtpClient.Config.DataConnectionEncryption = true;
                     }
                     else
                     {
-                        FtpClient.SslProtocols = SslProtocols.None;
-                        FtpClient.EncryptionMode = FtpEncryptionMode.None;
-                        FtpClient.DataConnectionEncryption = false;
+                        FtpClient.Config.SslProtocols = SslProtocols.None;
+                        FtpClient.Config.EncryptionMode = FtpEncryptionMode.None;
+                        FtpClient.Config.DataConnectionEncryption = false;
                     }
 
                     break;
